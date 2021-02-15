@@ -80,7 +80,7 @@ def main():
     OPTIM = ['taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.6','taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.7','taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.8']
     PRINT_OPTIM = ['TASO1','TASO2','TASO3']
 
-    PRINT_MODEL = {'densenetbc100': r'DenseNetBC100', 'resnet50': r'ResNet50', , 'vgg19': r'VGG19'}
+    PRINT_MODEL = {'densenetbc100': r'DenseNetBC100', 'resnet50': r'ResNet50', 'vgg19': r'VGG19'}
     PRINT_DATA = {'svhn': r'SVHN', 'cifar10': r'CIFAR10', 'cifar100': r'CIFAR100'}
     #####################################################################################################################
     #SVHN_LOSSES = ['sml1_na_id_no_no_no_no', 'dml1_pn2_id_no_no_no', 'dml3_pn2_id_no_no_no', 'dml10_pn2_id_no_no_no_no']
@@ -152,23 +152,24 @@ def main():
             print("\n########")
             print(data)
             print(model)
-            #best_results_data_frame['VALID DIFF'] = best_results_data_frame['VALID INTER_LOGITS MEAN'] - best_results_data_frame['VALID INTRA_LOGITS MEAN']
-            #best_results_data_frame['VALID DIV'] = best_results_data_frame['VALID INTER_LOGITS MEAN'] / best_results_data_frame['VALID INTRA_LOGITS MEAN']
+            ####best_results_data_frame['VALID DIFF'] = best_results_data_frame['VALID INTER_LOGITS MEAN'] - best_results_data_frame['VALID INTRA_LOGITS MEAN']
+            ####best_results_data_frame['VALID DIV'] = best_results_data_frame['VALID INTER_LOGITS MEAN'] / best_results_data_frame['VALID INTRA_LOGITS MEAN']
             df = best_results_data_frame.loc[
                 best_results_data_frame['DATA'].isin([data]) &
                 best_results_data_frame['MODEL'].isin([model])
             ]
-            #df = df.rename(columns={'VALID MAX_PROBS MEAN': 'MAX_PROBS', 'VALID ENTROPIES MEAN': 'ENTROPIES',
-            #                        'VALID INTRA_LOGITS MEAN': 'INTRA_LOGITS', 'VALID INTER_LOGITS MEAN': 'INTER_LOGITS'})
-            df = df[[
-                'OPTIM',
-                'TRAIN LOSS', 'TRAIN ACC1',
-                'VALID LOSS', 'VALID ACC1',
-            ]]
-            df = df.sort_values('VALID ACC1', ascending=False)#.drop_duplicates(["LOSS"])
-            ##df.to_csv(os.path.join(path, data+'+'+model+'+results_best.csv'), index=False)
-            #df = df.rename(columns={'VALID INTRA_LOGITS MEAN': 'VIALM', 'VALID INTER_LOGITS MEAN': 'VIELM'})
-            print(df)
+            #df = df[['OPTIM','TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1',]]
+            #df = df.sort_values('VALID ACC1', ascending=False)#.drop_duplicates(["LOSS"])
+            #print(df)
+            dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].mean()
+            dfx = dfx.rename(columns={'TRAIN LOSS': 'TRAIN LOSS MEAN', 'TRAIN ACC1': 'TRAIN ACC1 MEAN',
+                'VALID LOSS': 'VALID LOSS MEAN', 'VALID ACC1': 'VALID ACC1 MEAN'})
+            dfx = dfx.sort_values('VALID ACC1 MEAN', ascending=False)#.drop_duplicates(["LOSS"])
+            print(dfx)
+            #dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg([np.mean, np.std])
+            #print(dfx)
+            ####df.to_csv(os.path.join(path, data+'+'+model+'+results_best.csv'), index=False)
+            ####df = df.rename(columns={'VALID INTRA_LOGITS MEAN': 'VIALM', 'VALID INTER_LOGITS MEAN': 'VIELM'})
             print("########\n")
 
     sys.exit()

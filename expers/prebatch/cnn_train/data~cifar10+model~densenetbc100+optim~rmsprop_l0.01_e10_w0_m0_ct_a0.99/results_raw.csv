@@ -1,0 +1,6 @@
+DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
+cifar10,densenetbc100,rmsprop_l0.01_e10_w0_m0_ct_a0.99,1,1,TRAIN,LOSS,1.663499517059326
+cifar10,densenetbc100,rmsprop_l0.01_e10_w0_m0_ct_a0.99,1,1,TRAIN,ACC1,38.72
+cifar10,densenetbc100,rmsprop_l0.01_e10_w0_m0_ct_a0.99,1,1,HYPER,LR,0.01
+cifar10,densenetbc100,rmsprop_l0.01_e10_w0_m0_ct_a0.99,1,1,VALID,LOSS,2.5005001823425292
+cifar10,densenetbc100,rmsprop_l0.01_e10_w0_m0_ct_a0.99,1,1,VALID,ACC1,29.849999999999998

@@ -187,7 +187,8 @@ def main():
                 experiment_results = pd.read_csv(os.path.join(os.path.join(args.experiment_path, "results_best.csv")))
                 print("\n################################\n", "EXPERIMENT RESULTS", "\n################################")
                 print("\n", args.experiment_path.upper())
-                print("\n", experiment_results.transpose())
+                #print("\n", experiment_results.transpose())
+                print("\n", experiment_results)
                 print("\n", experiment_results.describe())
 
                 all_experiment_results[args.experiment_path] = experiment_results
