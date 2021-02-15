@@ -1,13 +1,3 @@
-# To do...
-# Use replace do pandas to rename values before sending to seaborn...
-# Save csv no experiment_path in a structured way... data, model, etc all separeted colums...
-# Agregate all the experiments csv in the experiment set level to compare between variations...
-# What to do with the screen prints???
-
-# Code for visualization goes here...
-# It uses all the configs for a given experiment...
-# Saves in the group experiment (all the configs for a given experiment) hierarchy folder...
-# It should call the correspond agent visualizer method...
 
 import argparse
 import os
@@ -53,38 +43,10 @@ parser = argparse.ArgumentParser(description='Analize results in csv files')
 parser.add_argument('-p', '--path', default="", type=str, help='Path for the experiments to be analized')
 parser.set_defaults(argument=True)
 
-random.seed(1234)
-np.random.seed(1234)
-torch.manual_seed(1234)
-torch.cuda.manual_seed(1234)
-
-
-def scatter(x, colors):
-    # Utility function to visualize the outputs of PCA and t-SNE
-    # choose a color palette with seaborn.
-    num_classes = len(np.unique(colors))
-    palette = np.array(sns.color_palette("hls", num_classes))
-
-    # create a scatter plot.
-    f = plt.figure(figsize=(8, 8))
-    ax = plt.subplot(aspect='equal')
-    sc = ax.scatter(x[:, 0], x[:, 1], lw=0, s=40, c=palette[colors.astype(np.int)])
-    plt.xlim(-25, 25)
-    plt.ylim(-25, 25)
-    ax.axis('off')
-    ax.axis('tight')
-
-    # add the labels for each digit corresponding to the label
-    txts = []
-    for i in range(num_classes):
-        # Position of each label at median of data points.
-        xtext, ytext = np.median(x[colors == i, :], axis=0)
-        #txt = ax.text(xtext, ytext, str(i), fontsize=24)
-        txt = ax.text(xtext, ytext, str(''), fontsize=24)
-        txt.set_path_effects([PathEffects.Stroke(linewidth=5, foreground="w"), PathEffects.Normal()])
-        txts.append(txt)
-
-    return f, ax, sc, txts
+random.seed(1000000)
+np.random.seed(1000000)
+torch.manual_seed(1000000)
+torch.cuda.manual_seed(1000000)
 
 
 def main():
@@ -98,10 +60,11 @@ def main():
 
     ###################################################
     ###################################################
-    MODELS = ['densenetbc100', 'resnet34','resnet110']#'resnet32', 
+    MODELS = ['densenetbc100', 'resnet50','vgg19'] 
     ###################################################
     ###################################################
 
+    """
     #LOSSES = ['sml1_na_id_no_no_no_no', 'dml10_pn2_id_no_no_no_no', 'eml1_pn2_id_no_no_lz0_10_ST_NO_0.01']
     LOSSES = ['sml1_na_id_no_no_no_no', 'dml10_pn2_id_no_no_no_no']
     #LOSSES_TEXTS = [r"SoftMax", r"IsoMax", r"IsoMax$_2$"]
@@ -113,18 +76,12 @@ def main():
         #'eml1_pn2_id_no_no_lz0_10_SC_NO_0.01': r"IsoMax$_2$"
         }
     """
-    PRINT_LOSS_ESPECIAL = {
-        'sml1_na_id_no_no_no_no': r"SoftMax",
-        'dml1_pn2_id_no_no': r"IsoMax ($E_s\!=\!1$)",
-        'dml3_pn2_id_no_no': r"IsoMax ($E_s\!=\!3$)",
-        'dml10_pn2_id_no_no_no_no': r"IsoMax ($E_s\!=\!10$)",
-        }
-    """
-    PRINT_MODEL = {'densenetbc100': r'DenseNet', 'resnet34': r'ResNet'}
-    PRINT_DATA = {
-        'svhn': r'SVHN', 'cifar10': r'CIFAR10', 'cifar100': r'CIFAR100',
-        'imagenet_resize': r'TinyImageNet', 'lsun_resize': r'LSUN',
-        'fooling_images': r'Fooling Images', 'gaussian_noise': r'Gaussian Noise', 'uniform_noise': r'Uniform Noise'}
+
+    OPTIM = ['taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.6','taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.7','taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.8']
+    PRINT_OPTIM = ['TASO1','TASO2','TASO3']
+
+    PRINT_MODEL = {'densenetbc100': r'DenseNetBC100', 'resnet50': r'ResNet50', , 'vgg19': r'VGG19'}
+    PRINT_DATA = {'svhn': r'SVHN', 'cifar10': r'CIFAR10', 'cifar100': r'CIFAR100'}
     #####################################################################################################################
     #SVHN_LOSSES = ['sml1_na_id_no_no_no_no', 'dml1_pn2_id_no_no_no', 'dml3_pn2_id_no_no_no', 'dml10_pn2_id_no_no_no_no']
     #SVHN_LOSSES_TEXTS = [r"SoftMax", r"IsoMax $(E_s\!=\!1)$", r"IsoMax $(E_s\!=\!3)$", r"IsoMax $(E_s\!=\!10)$"]
@@ -132,10 +89,11 @@ def main():
 
     print(DATASETS)
     print(MODELS)
-    print(LOSSES)
-    #print(LOSSES_TEXTS)
-    #print(SVHN_LOSSES)
-    #print(SVHN_LOSSES_TEXTS)
+    #print(LOSSES)
+    ##print(LOSSES_TEXTS)
+    ##print(SVHN_LOSSES)
+    ##print(SVHN_LOSSES_TEXTS)
+    print(OPTIM)
 
     args = parser.parse_args()
     path = os.path.join("expers", args.path)
@@ -200,35 +158,12 @@ def main():
                 best_results_data_frame['DATA'].isin([data]) &
                 best_results_data_frame['MODEL'].isin([model])
             ]
-            ##df['VALID DIFF'] = df['VALID INTER_LOGITS MEAN'] - df['VALID INTRA_LOGITS MEAN']
-            ##df['VALID DIV'] = df['VALID INTER_LOGITS MEAN'] / df['VALID INTRA_LOGITS MEAN']
-            #df = df.rename(columns={'VALID INTRA_LOGITS MEAN': 'VIALM', 'VALID INTER_LOGITS MEAN': 'VIELM'})
-            #df = df.rename(columns={'VALID INTRA_LOGITS STD': 'VIALS', 'VALID INTER_LOGITS STD': 'VIELS'})
-            #df = df.rename(columns={'VALID MAX_PROBS MEAN': 'VMPM', 'VALID ENTROPIES MEAN': 'VEM'})
-            df = df.rename(columns={'VALID MAX_PROBS MEAN': 'MAX_PROBS', 'VALID ENTROPIES MEAN': 'ENTROPIES',
-                                    'VALID INTRA_LOGITS MEAN': 'INTRA_LOGITS', 'VALID INTER_LOGITS MEAN': 'INTER_LOGITS'})
-            """
+            #df = df.rename(columns={'VALID MAX_PROBS MEAN': 'MAX_PROBS', 'VALID ENTROPIES MEAN': 'ENTROPIES',
+            #                        'VALID INTRA_LOGITS MEAN': 'INTRA_LOGITS', 'VALID INTER_LOGITS MEAN': 'INTER_LOGITS'})
             df = df[[
-                'DATA', 'MODEL', 'LOSS',
+                'OPTIM',
                 'TRAIN LOSS', 'TRAIN ACC1',
-                #'TRAIN INTRA_LOGITS MEAN', 'TRAIN INTRA_LOGITS STD', 'TRAIN INTER_LOGITS MEAN', 'TRAIN INTER_LOGITS STD',
                 'VALID LOSS', 'VALID ACC1',
-                #'VALID INTRA_LOGITS MEAN', 'VALID INTRA_LOGITS STD', 'VALID INTER_LOGITS MEAN', 'VALID INTER_LOGITS STD'
-                #'VALID INTRA_LOGITS MEAN', 'VALID INTER_LOGITS MEAN',
-                #'VALID MAX_PROBS MEAN', 'VALID ENTROPIES MEAN',
-                #'VMPM', 'VEM', 'VIALM', 'VIELM', 'VALID DIFF', 'VALID DIV',
-                'VIALM', 'VIELM','VIALS', 'VIELS', 'VALID DIFF', 'VALID DIV',
-            ]]
-            """
-            df = df[[
-                #'DATA', 'MODEL',
-                'LOSS',
-                'TRAIN LOSS', 'TRAIN ACC1',
-                'VALID LOSS', 'VALID ACC1', 'VALID ODD_ACC',
-                #'VIALM', 'VIELM','VIALS', 'VIELS', 'VALID DIFF', 'VALID DIV',
-                #'VALID MAX_PROBS MEAN', 'VALID ENTROPIES MEAN',
-                'MAX_PROBS', 'ENTROPIES',
-                'INTRA_LOGITS', 'INTER_LOGITS'
             ]]
             df = df.sort_values('VALID ACC1', ascending=False)#.drop_duplicates(["LOSS"])
             ##df.to_csv(os.path.join(path, data+'+'+model+'+results_best.csv'), index=False)
@@ -236,12 +171,17 @@ def main():
             print(df)
             print("########\n")
 
+    sys.exit()
 
 
 
 
 
-    """
+
+
+
+
+
     print("\n########################################")
     print("######## TABLE: INFERENCE DEALYS #######")
     print("########################################")
@@ -290,92 +230,7 @@ def main():
         df = df.groupby(['MODEL','IN-DATA','LOSS','SCORE'], as_index=False)['CPU_FALSE','CPU_TRUE','GPU_FALSE','GPU_TRUE'].mean()
         with pd.option_context('display.max_rows', None, 'display.max_columns', None):
             print(df)
-    """
-
-
-
-
-
-
-
-
-
-    print("\n#####################################")
-    print("######## TABLE: ODD METRICS #########")
-    print("#####################################")
-    data_frame_list = []
-    for file in file_names_dict_of_lists['results_odd.csv']:
-        data_frame_list.append(pd.read_csv(file))
-    best_results_data_frame = pd.concat(data_frame_list)
-    best_results_data_frame.to_csv(os.path.join(path, 'all_results_odd.csv'), index=False)
-    #######################################################################################
-    dfx = best_results_data_frame.loc[best_results_data_frame['IN-DATA'].isin(EXTRA_DATASETS)]
-    dfx.to_csv(os.path.join(path, 'extra_results_odd.csv'), index=False)
-    #######################################################################################
-    #print(best_results_data_frame, "\n")
-    for data in DATASETS:
-    #for data in (DATASETS + EXTRA_DATASETS):
-        for model in MODELS:
-            print("\n########")
-            print(data)
-            print(model)
-            """
-            df = best_results_data_frame.loc[
-                best_results_data_frame['IN-DATA'].isin([data]) &
-                best_results_data_frame['MODEL'].isin([model]) &
-                #best_results_data_frame['SCORE'].isin(["NE","MP"]) &
-                best_results_data_frame['SCORE'].isin(["NE"]) &
-                best_results_data_frame['INFER-LEARN'].isin(['NO']) &
-                best_results_data_frame['OUT-DATA'].isin(['svhn','lsun_resize','imagenet_resize','cifar10'])
-                #best_results_data_frame['OUT-DATA'].isin(['svhn','lsun_resize','imagenet_resize','cifar10','gaussian_noise', 'uniform_noise'])
-                #best_results_data_frame['OUT-DATA'].isin(['svhn','lsun_resize','imagenet_resize','cifar10', 'fooling_images','gaussian_noise', 'uniform_noise'])
-                ]
-            df = df[['MODEL','IN-DATA','LOSS','OUT-DATA','SCORE','TNR','AUROC','DTACC','AUIN','AUOUT']]
-            df = df.sort_values(['LOSS','OUT-DATA','AUROC'], ascending=False)
-            ####df.to_csv(os.path.join(path, data+'_'+model+'_results_best.csv'), index=False)
-            ####df = df.groupby(['LOSS','AD-HOC','SCORE','INFER-LEARN','INFER-TRANS'], as_index=False)['AUROC'].mean()
-            ##df = df.groupby(['LOSS','SCORE'], as_index=False)['TNR'].mean()
-            ##df = df.sort_values(['TNR'], ascending=False)
-            df = df.groupby(['LOSS','SCORE'], as_index=False)['AUROC'].mean()
-            df = df.sort_values(['AUROC'], ascending=False)
-            with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-                print(df)
-            """
-            df = best_results_data_frame.loc[
-                best_results_data_frame['IN-DATA'].isin([data]) &
-                best_results_data_frame['MODEL'].isin([model]) &
-                #best_results_data_frame['LOSS'].isin(['eml_pn2_id_no_no_lz_10_ST_NO_0']) &
-                #best_results_data_frame['LOSS'].isin(['eml_pn2_id_no_no_lz_10_ST_NO_0.1']) &
-                #best_results_data_frame['LOSS'].isin(['eml_pn2_id_no_no_lz_10_ST_NO_0.01']) &
-                #best_results_data_frame['INFER-LEARN'].isin(['NO','ML','DV']) &
-                best_results_data_frame['INFER-LEARN'].isin(['NO']) &
-                best_results_data_frame['INFER-TRANS'].isin([False]) &
-                #best_results_data_frame['SCORE'].isin(["MP","NE"]) &
-                best_results_data_frame['SCORE'].isin(["NE"]) &
-                # THE MEAN OF THE METRICS SHOULD EXCLUDE NOISE OUT DATA???
-                best_results_data_frame['OUT-DATA'].isin(['svhn','lsun_resize','imagenet_resize','cifar10'])
-                #best_results_data_frame['OUT-DATA'].isin(['gaussian_noise','uniform_noise'])
-                #best_results_data_frame['OUT-DATA'].isin(['svhn','lsun_resize','imagenet_resize','cifar10','gaussian_noise','uniform_noise'])
-                ####best_results_data_frame['OUT-DATA'].isin(['svhn','lsun_resize','imagenet_resize','cifar10','gaussian_noise','uniform_noise','fooling_images'])
-                #best_results_data_frame['OUT-DATA'].isin(['fooling_images'])
-                # DO NOT USE FOOLING IMAGES ANYMORE SINCE NOBODY USES AND IT IS UNLIKE IN REALWORLD!!!
-                ]
-            #df = df[['MODEL','IN-DATA','LOSS','INFER-LEARN','INFER-TRANS','OUT-DATA','SCORE','TNR','AUROC','DTACC','AUIN','AUOUT']]
-            df = df[['MODEL','IN-DATA','LOSS','INFER-LEARN','SCORE','OUT-DATA','TNR','AUROC','DTACC','AUIN','AUOUT']]
-            ####df = df.sort_values(['LOSS','OUT-DATA','AUROC'], ascending=False)
-            #df = df.sort_values(['OUT-DATA','AUROC'], ascending=False)
-            #df = df.sort_values(['OUT-DATA','DTACC'], ascending=False)
-            ####df.to_csv(os.path.join(path, data+'_'+model+'_results_best.csv'), index=False)
-            ####df = df.groupby(['LOSS','AD-HOC','SCORE','INFER-LEARN','INFER-TRANS'], as_index=False)['AUROC'].mean()
-            ##df = df.groupby(['LOSS','INFER-LEARN','SCORE'], as_index=False)['TNR'].mean()
-            ##df = df.sort_values(['TNR'], ascending=False)
-            ############################
-            df = df.groupby(['LOSS','INFER-LEARN','SCORE'], as_index=False)['AUROC'].mean()
-            df = df.sort_values(['AUROC'], ascending=False)
-            #df = df.sort_values(['LOSS','SCORE','OUT-DATA'], ascending=False)
-            ############################
-            with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-                print(df)
+    
 
 
     sns.set_context("paper", font_scale=1.6)
@@ -413,20 +268,6 @@ def main():
     ax.set_xlabel('Entropic Score')
     ax.set_ylim(70, 100)
     ax.set_title(r'OOD Detection [$\overline{\mathrm{AUROC}}$] (%)', loc='center')
-    """
-    ax = plt.subplot(1, 3, 3)   
-    ax.plot([8,9,10,11,12], [90,90,90,90,90], label="DenseNet|CIFAR10")
-    ax.plot([8,9,10,11,12], [93,93,93,93,93], label="ResNet|CIFAR10")
-    ax.plot([8,9,10,11,12], [91,91,91,91,91], label="DenseNet|CIFAR100")
-    ax.plot([8,9,10,11,12], [94,94,94,94,94], label="ResNet|CIFAR100")
-    ax.plot([8,9,10,11,12], [92,92,92,94,94], label="DenseNet|SVHN")
-    ax.plot([8,9,10,11,12], [95,95,95,95,95], label="ResNet|SVHN")
-    ax.axvline(10, color='black', linestyle='dashed')
-    ax.set_xticks([8,9,10,11,12])
-    ax.set_xlabel('Entropic Score')
-    ax.set_ylim(85, 100)
-    ax.set_title('OOD Detection [$\overline{\mathrm{DTACC}}$] (%)', loc='center')
-    """
     with sns.axes_style("white"):
         plt.legend(loc='upper right', bbox_to_anchor=(1, -0.25), ncol=6, fontsize=13)
     #fig.subplots_adjust(top=0.83)
@@ -436,7 +277,7 @@ def main():
     print("############################## ACABOU!!! ######################")  
 
 
-    """
+
     sns.set_context("paper", font_scale=1.4)
     print("\n#####################################")
     print("###### entropic scale parametrization ########")
@@ -493,10 +334,9 @@ def main():
             plt.savefig(os.path.join(path, 'plot_odd1_entropic_scale_parametrization_'+model+'_'+data), bbox_inches='tight', dpi=150)
             plt.close()
             print("########\n")
-    """
 
 
-    #"""
+
     sns.set_context("paper", font_scale=1.5)
     print("\n############################################################################")
     print("####### FIGURES: NEW NEW NEW!!! TRAINING LOSS AND VALID ACCURACIES #########")
@@ -578,10 +418,9 @@ def main():
         elif metric == 'VALID ACCURACY':
             plt.savefig(os.path.join(path, 'plot_odd1_test_accuracies.png'), bbox_inches='tight', dpi=150)
         plt.close()
-    #"""
 
 
-    #"""
+
     sns.set_context("paper", font_scale=1.2)
     print("\n##########################################################")
     print("######## FIGURES: TRAINING LOSSES AND ENTROPIES ##########")
@@ -639,7 +478,7 @@ def main():
                         legend.remove()
                     plt.savefig(os.path.join(path, 'plot_train_losses_entropies+'+model+'+'+data+'+'+loss+'.png'), bbox_inches='tight', dpi=150)
                     plt.close()
-    #"""
+
 
 
     sns.set_context("paper", font_scale=1.3)
@@ -648,6 +487,7 @@ def main():
     print("#####################################")
     print()
     bins = 30
+
     for data in DATASETS:
     #for data in ['cifar10']:
         if data == 'cifar10':
@@ -891,6 +731,7 @@ def main():
                 plt.close()
 
 
+
     sns.set_context("paper", font_scale=1.6)
     MODELS = ['densenetbc100','resnet34']
     METRICS = ['VALID ACC1','MEAN AUROC','MEAN TNR']
@@ -1100,7 +941,6 @@ def main():
 if __name__ == '__main__':
     main()
 
-
     """
     print("\n#####################################")
     print("####### FIGURE: T-SNE PLOTS #########")
@@ -1135,7 +975,6 @@ if __name__ == '__main__':
                     plt.close()
                     print("\n########")
     """
-
 
     """
     #for paper in ['odd1','odd2']:
@@ -1267,7 +1106,6 @@ if __name__ == '__main__':
     #LOSSES = ['sml1_na_id_no_no_no_no', 'dml10_pn2_id_no_no_no_no', 'eml1_pn2_id_no_no_lz0_10_ST_NO_0.01']
     #LOSSES_TEXTS = [r"SoftMax", r"IsoMax", r"IsoMax$_2$"]
     """
-
 
     """
     print("\n#####################################")

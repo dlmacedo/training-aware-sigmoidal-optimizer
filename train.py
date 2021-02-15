@@ -26,10 +26,10 @@ pd.set_option('display.width', 160)
 
 parser = argparse.ArgumentParser(description='Train')
 
-parser.add_argument('-x', '--executions', default=3, type=int, metavar='N', help='Number of executions')
+parser.add_argument('-x', '--executions', default=5, type=int, metavar='N', help='Number of executions')
 parser.add_argument('-w', '--workers', default=4, type=int, metavar='N', help='number of data loading workers')
-#parser.add_argument('-e', '--epochs', default=2, type=int, metavar='N', help='number of total epochs to run')
 parser.add_argument('-bs', '--batch-size', default=64, type=int, metavar='N', help='mini-batch size')
+#parser.add_argument('-e', '--epochs', default=2, type=int, metavar='N', help='number of total epochs to run')
 #parser.add_argument('-lr', '--original-learning-rate', default=0.1, type=float, metavar='LR', help='initial learning rate')
 ##parser.add_argument('-lrdr', '--learning-rate-decay-rate', default=0.1, type=float, metavar='LRDR', help='learning rate decay rate')
 ##parser.add_argument('-lrde', '--learning-rate-decay-epochs', default="150 200 250", metavar='LRDE', help='learning rate decay epochs')
@@ -90,7 +90,7 @@ def main():
 
                 print("\n\n\n\n")
                 print("***************************************************************")
-                args.base_seed = 100000 ###### <<<<<===== x1 = 100001
+                args.base_seed = 1000000 ###### <<<<<===== x1 = 100001
                 args.number_of_first_partition_examples_per_class = 1000000
                 args.number_of_second_partition_examples_per_class = 0
                 args.number_of_model_classes = None
@@ -192,11 +192,11 @@ def main():
 
                 all_experiment_results[args.experiment_path] = experiment_results
 
-    print("\n\n\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n", "ALL EXPERIMENT RESULTS", "\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    for key in all_experiment_results:
-        print("\n", key.upper())
-        print("\n", all_experiment_results[key].transpose())
-        print("\n", all_experiment_results[key].describe().reindex(['count', 'avg', 'std']))
+    #print("\n\n\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n", "ALL EXPERIMENT RESULTS", "\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    #for key in all_experiment_results:
+    #    print("\n", key.upper())
+    #    print("\n", all_experiment_results[key].transpose())
+    #    print("\n", all_experiment_results[key].describe().reindex(['count', 'avg', 'std']))
 
 
 if __name__ == '__main__':

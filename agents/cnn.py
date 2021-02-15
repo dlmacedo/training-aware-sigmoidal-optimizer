@@ -43,7 +43,8 @@ class CNNAgent:
          self.trainset_first_partition_loader_for_infer,
          self.trainset_second_partition_loader_for_infer,
          self.valset_loader, self.normalize) = image_loaders.get_loaders()
-        self.batch_normalize = loaders.BatchNormalize(self.normalize.mean, self.normalize.std, inplace=True, device=torch.cuda.current_device())
+        self.batch_normalize = loaders.BatchNormalize(
+            self.normalize.mean, self.normalize.std, inplace=True, device=torch.cuda.current_device())
         if self.args.partition == "1":
             self.trainset_loader_for_train = self.trainset_first_partition_loader_for_train
         elif self.args.partition == "2":
@@ -118,7 +119,11 @@ class CNNAgent:
             beta = float(self.args.optim.split("_")[7][1:])
             parameters = self.model.parameters()
             self.optimizer = torch.optim.SGD(
-                parameters, lr=initial_learning_rate, momentum=momentum, nesterov=nesterov, weight_decay=weight_decay)
+                parameters,
+                lr=initial_learning_rate,
+                weight_decay=weight_decay,
+                momentum=momentum,
+                nesterov=nesterov)
             taso_function = lambda epoch: 1/(1 + math.exp(alpha*(((epoch+1)/self.args.epochs)-beta))) + 0.001
             self.scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=taso_function, verbose=True)
             print("INITIAL LEARNING RATE: ", initial_learning_rate)
@@ -132,42 +137,76 @@ class CNNAgent:
             print("\n$$$$$$$$$$$$$$$")
             print("OPTIMIZER: ADAM")
             print("$$$$$$$$$$$$$$$\n")
+            initial_learning_rate = float(self.args.optim.split("_")[1][2:])
+            self.args.epochs = int(self.args.optim.split("_")[2][1:])
+            weight_decay = float(self.args.optim.split("_")[3][1:])
+            amsgrad = True if (self.args.optim.split("_")[4][1:] == "t") else False
+            beta_first = float(self.args.optim.split("_")[5][2:])
+            beta_second = float(self.args.optim.split("_")[6][2:])
             parameters = self.model.parameters()
-            self.optimizer = torch.optim.SGD(
+            self.optimizer = torch.optim.Adam(
                 parameters,
-                lr=self.args.original_learning_rate,
-                momentum=self.args.momentum,
-                nesterov=True,
-                weight_decay=args.weight_decay)
+                lr=initial_learning_rate,
+                amsgrad=amsgrad,
+                betas=(beta_first, beta_second))
+            print("INITIAL LEARNING RATE: ", initial_learning_rate)
+            print("TOTAL EPOCHS: ", self.args.epochs)
+            print("WEIGHT DECAY: ", weight_decay)
+            print("AMSGRAD: ", amsgrad)
+            print("BETA_FIRST: ", beta_first)
+            print("BEST_SECOND: ", beta_second)
         elif self.args.optim.startswith("rmsprop"):
             print("\n$$$$$$$$$$$$$$$$$$")
             print("OPTIMIZER: RMSPROP")
             print("$$$$$$$$$$$$$$$$$$\n")
+            initial_learning_rate = float(self.args.optim.split("_")[1][2:])
+            self.args.epochs = int(self.args.optim.split("_")[2][1:])
+            weight_decay = float(self.args.optim.split("_")[3][1:])
+            momentum = float(self.args.optim.split("_")[4][1:])
+            centered = True if (self.args.optim.split("_")[5][1:] == "t") else False
+            alpha = float(self.args.optim.split("_")[6][1:])
             parameters = self.model.parameters()
-            self.optimizer = torch.optim.SGD(
+            self.optimizer = torch.optim.RMSprop(
                 parameters,
-                lr=self.args.original_learning_rate,
-                momentum=self.args.momentum,
-                nesterov=True,
-                weight_decay=args.weight_decay)
+                lr=initial_learning_rate,
+                weight_decay=weight_decay,
+                momentum=momentum,
+                centered=centered,
+                alpha=alpha)
+            print("INITIAL LEARNING RATE: ", initial_learning_rate)
+            print("TOTAL EPOCHS: ", self.args.epochs)
+            print("WEIGHT DECAY: ", weight_decay)
+            print("MOMENTUM: ", momentum)
+            print("ALPHA: ", alpha)
         elif self.args.optim.startswith("adagrad"):
             print("\n$$$$$$$$$$$$$$$$$$")
             print("OPTIMIZER: ADAGRAD")
             print("$$$$$$$$$$$$$$$$$$\n")
+            initial_learning_rate = float(self.args.optim.split("_")[1][2:])
+            self.args.epochs = int(self.args.optim.split("_")[2][1:])
+            weight_decay = float(self.args.optim.split("_")[3][1:])
+            lr_decay = float(self.args.optim.split("_")[4][1:])
+            initial_accumulator_value = float(self.args.optim.split("_")[5][1:])
             parameters = self.model.parameters()
-            self.optimizer = torch.optim.SGD(
+            self.optimizer = torch.optim.Adagrad(
                 parameters,
-                lr=self.args.original_learning_rate,
-                momentum=self.args.momentum,
-                nesterov=True,
-                weight_decay=args.weight_decay)
+                lr=initial_learning_rate,
+                weight_decay=weight_decay,
+                lr_decay=lr_decay,
+                initial_accumulator_value=initial_accumulator_value)
+            print("INITIAL LEARNING RATE: ", initial_learning_rate)
+            print("TOTAL EPOCHS: ", self.args.epochs)
+            print("WEIGHT DECAY: ", weight_decay)
+            print("LR DECAY: ", lr_decay)
+            print("INITIAL ACCUMULATOR VALUE: ", initial_accumulator_value)
 
-        #self.scheduler = torch.optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=self.args.learning_rate_decay_epochs, gamma=args.learning_rate_decay_rate)
+        #self.scheduler = torch.optim.lr_scheduler.MultiStepLR(
+        # self.optimizer, milestones=self.args.learning_rate_decay_epochs, gamma=args.learning_rate_decay_rate)
 
         print("\nTRAIN:")
-        print(self.criterion)
+        #print(self.criterion)
         print(self.optimizer)
-        print(self.scheduler)
+        #print(self.scheduler)
 
     def parameters_weight_decay(self, special_weight_decay_list=()):
         regular_parameters, no_weight_decay_parameters = [], []
@@ -208,6 +247,7 @@ class CNNAgent:
             # Print current learning rate...
             for param_group in self.optimizer.param_groups:
                 print("\nLEARNING RATE:\t\t", param_group["lr"])
+                temp_learning_rate = param_group["lr"]
 
             train_loss, train_acc1 = self.train_epoch()
             valid_loss, valid_acc1 = self.validate_epoch()
@@ -227,7 +267,7 @@ class CNNAgent:
                 ###################################################################################################
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
                     self.args.dataset_full, self.args.model_name, self.args.optim, self.args.execution, self.epoch,
-                    "HYPER", "LR", param_group["lr"]))
+                    "HYPER", "LR", temp_learning_rate))
                 ###################################################################################################
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
                     self.args.dataset_full, self.args.model_name, self.args.optim, self.args.execution, self.epoch,
