@@ -1,6 +1,0 @@
-DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
-cifar10,densenetbc100,adam_l0.001_e10_w0_af_bf0.9_bs0.99,1,1,TRAIN,LOSS,1.3283465341949463
-cifar10,densenetbc100,adam_l0.001_e10_w0_af_bf0.9_bs0.99,1,1,TRAIN,ACC1,51.564
-cifar10,densenetbc100,adam_l0.001_e10_w0_af_bf0.9_bs0.99,1,1,HYPER,LR,0.001
-cifar10,densenetbc100,adam_l0.001_e10_w0_af_bf0.9_bs0.99,1,1,VALID,LOSS,1.0840670847892762
-cifar10,densenetbc100,adam_l0.001_e10_w0_af_bf0.9_bs0.99,1,1,VALID,ACC1,61.27
