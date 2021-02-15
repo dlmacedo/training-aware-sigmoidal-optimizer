@@ -44,37 +44,6 @@ parser.add_argument('-ec', '--exps-configs', default="", type=str, metavar='CONF
 ##parser.add_argument('-base', '--base-seed', default="10000", type=int, metavar='CONFIGS', help='Base seed to be used')
 
 
-
-############################################################################
-############################################################################
-"""
-# adam 
-parser.add_argument('--adam-lr', type=str, default='0.001', help='learning rate value for the adam algorithm')
-parser.add_argument('--adam-beta1', type=str, default='0.9', help='beta1 value in the adam algorithm')
-parser.add_argument('--adam-beta2', type=str, default='0.999', help='beta2 value in the adam algorithm')
-parser.add_argument('--adam-eps', type=str, default='1e-8', help='eps value in the adam algorithm')
-parser.add_argument('--adam-weight-decay', type=str, default='0', help='weight decay in the adam algoright')
-parser.add_argument('--adam-amsgrad', type=str, default='False', help='use AMSgrad variance of the adam algorithm')
-
-# rmsprop
-parser.add_argument('--rmsprop-lr', type=str, default='0.01', help='learning rate value for the adam algorithm')
-parser.add_argument('--rmsprop-momentum', type=str, default='0', help='momentum value in the rmsprop algorithm')
-parser.add_argument('--rmsprop-alpha', type=str, default='0.99', help='alpha value in the rmsprop algoright')
-parser.add_argument('--rmsprop-eps', type=str, default='1e-8', help='eps value in the rmsporp algorithm')
-parser.add_argument('--rmsprop-centered', type=str, default='False', help='if True compute the centered rmsprop')
-parser.add_argument('--rmsprop-weight-decay', type=str, default='0',  help='weight decay in the rmsprop algorithmt')
-
-# adagrad
-parser.add_argument('--adagrad-lr', type=str, default='0.001', help='learning rate value for the adagrad algorithm')
-parser.add_argument('--adagrad-learning-decay', type=str, default='0.99', help='learning rate decay in the adagrad algoright')
-parser.add_argument('--adagrad-weight-decay', type=str, default='0',  help='weight decay in the adagrad algorithmt')
-parser.add_argument('--adagrad-initial-acumulator', type=str, default='0', help='initial acumulator value in the adagrad algorithm')
-"""
-############################################################################
-############################################################################
-
-
-
 args = parser.parse_args()
 args.exps_inputs = args.exps_inputs.split(":")
 args.exps_types = args.exps_types.split(":")
@@ -122,26 +91,15 @@ def main():
                 print("\n\n\n\n")
                 print("***************************************************************")
                 args.base_seed = 100000 ###### <<<<<===== x1 = 100001
-                #args.base_seed = 1230 ###### <<<<<===== x1 = 1231
-                #args.base_seed = 1000 ###### <<<<<===== x1 = 1001
-                #args.base_seed = 0 ###### <<<<<===== x1 = 1001
                 args.number_of_first_partition_examples_per_class = 1000000
                 args.number_of_second_partition_examples_per_class = 0
                 args.number_of_model_classes = None
-                #args.batch_norm = False
-                #args.infer_type = "std"
-                #args.convergence_factor = 0.1
                 args.partition = "1"
 
                 print("EXPERIMENT INPUT:", args.exp_input.upper())
                 print("EXPERIMENT TYPE:", args.exp_type.upper())
                 print("EXPERIMENT CONFIG:", args.exp_config.upper())
 
-                #if args.exp_type == "cnn_odd_infer":
-                #    args.experiment_path = os.path.join("expers", args.exp_input, "cnn_train", args.exp_config)
-                #elif args.exp_type == "cnn_adv_infer":
-                #    args.experiment_path = os.path.join("expers", args.exp_input, "cnn_train", args.exp_config)
-                #else:
                 args.experiment_path = os.path.join("expers", args.exp_input, args.exp_type, args.exp_config)
 
                 if not os.path.exists(args.experiment_path):
@@ -153,14 +111,6 @@ def main():
 
                 for config in args.exp_config.split("+"):
                     config = config.split("~")
-                    #if config[0] == "bsd":
-                    #    args.base_seed = int(config[1])
-                    #    print("BASE SEED:", args.base_seed)
-                    #elif config[0] == "bn":
-                    #if config[0] == "bn":
-                    #    if int(config[1]) == 1:
-                    #        args.batch_norm = True
-                    #    print("BATCH NORM:", args.batch_norm)
                     if config[0] == "data":
                         args.dataset_full = str(config[1])
                         print("DATASET FULL:", args.dataset_full.upper())
@@ -184,15 +134,9 @@ def main():
                     elif config[0] == "model":
                         args.model_name = str(config[1])
                         print("MODEL:", args.model_name.upper())
-                    #elif config[0] == "loss":
-                    #    args.loss = str(config[1])
-                    #    print("LOSS:", args.loss.upper())
                     elif config[0] == "optim":
                         args.optim = str(config[1])
                         print("OPTIM:", args.optim.upper())
-                    #elif config[0] == "kernel":
-                    #    args.kernel = str(config[1])
-                    #    print("EXPERIMENT KERNEL:", args.kernel.upper())
 
                 if args.dataset == "mnist":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 10
@@ -217,15 +161,7 @@ def main():
 
                     print("\n\n################ EXECUTION:", args.execution, "OF", args.executions, "################")
 
-                    #best_model_file = args.model_name + "_" + args.dataset + ".pth"
-                    # args.best_model_file_path = os.path.join(args.experiment_path, best_model_file)
                     args.best_model_file_path = os.path.join(args.experiment_path, "model" + str(args.execution) + ".pth")
-                    # args.best_model_file_alternative_path = os.path.join(args.experiment_alternative_path, best_model_file)
-                    # alternative path does not support many executions...
-                    # args.last_model_file_path = os.path.join(args.experiment_path, args.model_name + "_" + args.dataset + "_last.pth")
-                    #################
-                    #args.best_model_file_alternative_path = os.path.join(args.experiment_alternative_path, args.model_name + "_" + args.dataset + ".pth")
-                    #################
 
                     random.seed(args.base_seed)
                     numpy.random.seed(args.base_seed)

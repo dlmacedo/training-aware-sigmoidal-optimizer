@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import losses
+#import losses
 
 
 def conv3x3_(in_planes, out_planes, stride=1, groups=1, dilation=1):

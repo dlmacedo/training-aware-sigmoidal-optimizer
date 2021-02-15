@@ -3,7 +3,7 @@ import torch
 import sys
 import torch.nn as nn
 import torch.nn.functional as F
-import losses
+#import losses
 
 
 def conv3x3(in_planes, out_planes, stride=1):
