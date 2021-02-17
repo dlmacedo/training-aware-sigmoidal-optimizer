@@ -106,7 +106,34 @@ class CNNAgent:
         self.criterion = nn.CrossEntropyLoss().cuda()
 
         # create train
-        if self.args.optim.startswith("taso"):
+        if self.args.optim.startswith("sgd"):
+            print("\n$$$$$$$$$$$$$$$")
+            print("OPTIMIZER: SGD")
+            print("$$$$$$$$$$$$$$$\n")
+            initial_learning_rate = float(self.args.optim.split("_")[1][2:])
+            self.args.epochs = int(self.args.optim.split("_")[2][1:])
+            weight_decay = float(self.args.optim.split("_")[3][1:])
+            momentum = float(self.args.optim.split("_")[4][1:])
+            nesterov = True if (self.args.optim.split("_")[5][1:] == "t") else False
+            #alpha = float(self.args.optim.split("_")[6][1:])
+            #beta = float(self.args.optim.split("_")[7][1:])
+            parameters = self.model.parameters()
+            self.optimizer = torch.optim.SGD(
+                parameters,
+                lr=initial_learning_rate,
+                weight_decay=weight_decay,
+                momentum=momentum,
+                nesterov=nesterov)
+            #taso_function = lambda epoch: 1/(1 + math.exp(alpha*(((epoch+1)/self.args.epochs)-beta))) + 0.001
+            #self.scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=taso_function, verbose=True)
+            print("INITIAL LEARNING RATE: ", initial_learning_rate)
+            print("TOTAL EPOCHS: ", self.args.epochs)
+            print("WEIGHT DECAY: ", weight_decay)
+            print("MOMENTUM: ", momentum)
+            print("NESTEROV: ", nesterov)
+            #print("ALPHA: ", alpha)
+            #print("BETA: ", beta)
+        elif self.args.optim.startswith("taso"):
             print("\n$$$$$$$$$$$$$$$")
             print("OPTIMIZER: TASO")
             print("$$$$$$$$$$$$$$$\n")

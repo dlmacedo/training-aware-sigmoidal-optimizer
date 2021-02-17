@@ -14,4 +14,4 @@
 #python train.py -ei="pretune" -et "cnn_train" -ec "data~cifar10+model~resnet34+optim~taso_l0.1_e100_w0_m0_nt_a25_b0.7" -gpu 1
 #python train.py -ei="pretune" -et "cnn_train" -ec "data~cifar10+model~resnet34+optim~taso_l0.1_e100_w0.0001_m0_nt_a25_b0.7" -gpu 1
 #python train.py -ei="pretune" -et "cnn_train" -ec "data~cifar10+model~resnet34+optim~taso_l0.1_e100_w0_m0.9_nt_a25_b0.7" -gpu 1
-python train.py -ei="pretune" -et "cnn_train" -ec "data~cifar10+model~resnet34+optim~taso_l0.1_e100_w0.0001_m0.9_nt_a25_b0.7" -gpu 1
+python train.py -ei="pretune" -et "cnn_train" -ec "data~cifar10+model~resnet34+optim~sgd_l0.1_e100_w0.0001_m0.9_nt" -gpu 1
