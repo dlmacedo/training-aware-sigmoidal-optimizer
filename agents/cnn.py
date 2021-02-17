@@ -67,8 +67,8 @@ class CNNAgent:
         elif self.args.model_name == "resnet110":
             self.model = models.ResNet110(
                 num_c=self.args.number_of_model_classes)
-        elif self.args.model_name == "resnet56":
-            self.model = models.ResNet56(
+        elif self.args.model_name == "resnet50":
+            self.model = models.ResNet50(
                 num_c=self.args.number_of_model_classes)
         elif self.args.model_name == "resnet18_":
             self.model = models.resnet18_(
@@ -148,6 +148,7 @@ class CNNAgent:
                 parameters,
                 lr=initial_learning_rate,
                 amsgrad=amsgrad,
+                weight_decay=weight_decay,
                 betas=(beta_first, beta_second))
             print("INITIAL LEARNING RATE: ", initial_learning_rate)
             print("TOTAL EPOCHS: ", self.args.epochs)
@@ -335,10 +336,10 @@ class CNNAgent:
         loss_meter = utils.MeanMeter()
         #odd_loss_meter = utils.MeanMeter()
         accuracy_meter = tnt.meter.ClassErrorMeter(topk=[1], accuracy=True)
-        odd_accuracy_meter = tnt.meter.ClassErrorMeter(topk=[1], accuracy=True)
-        epoch_logits = {"intra": [], "inter": []}
-        epoch_metrics = {"max_probs": [], "entropies": []}
-        #epoch_entropies_per_classes =  [[] for i in range(self.model.classifier.weights.size(0))]
+        #odd_accuracy_meter = tnt.meter.ClassErrorMeter(topk=[1], accuracy=True)
+        #epoch_logits = {"intra": [], "inter": []}
+        #epoch_metrics = {"max_probs": [], "entropies": []}
+        ##epoch_entropies_per_classes =  [[] for i in range(self.model.classifier.weights.size(0))]
 
         for batch_index, (inputs, targets) in enumerate(self.trainset_loader_for_train):
             batch_index += 1
@@ -346,6 +347,11 @@ class CNNAgent:
             # moving to GPU...
             inputs = inputs.cuda()
             targets = targets.cuda(non_blocking=True)
+            
+            #print("\n############")
+            #print("INPUTS SIZE:")
+            #print(inputs.size())
+            #print("############\n")
 
             # compute output
             outputs = self.model(inputs)

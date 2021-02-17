@@ -146,6 +146,8 @@ def main():
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 100
                 elif args.dataset == "svhn":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 10
+                elif args.dataset == "stl10":
+                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 10
                 elif args.dataset == "imagenet32":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
                 elif args.dataset == "imagenet2012":

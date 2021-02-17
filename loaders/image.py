@@ -201,17 +201,19 @@ class ImageLoader:
         elif args.dataset == "stl10":
             self.normalize = transforms.Normalize((0.446, 0.439, 0.406), (0.260,  0.256, 0.271))
             self.train_transform = transforms.Compose([
+                transforms.Resize(32), #### Important!!!
                 transforms.RandomCrop(32, padding=4),
                 transforms.RandomHorizontalFlip(),
                 transforms.ToTensor(),
                 self.normalize,
             ])
             self.inference_transform = transforms.Compose([
+                transforms.Resize(32), #### Important!!!
                 transforms.ToTensor(),
                 self.normalize,
             ])
             ##########################################################
-            self.inference_transform = transforms.Compose([transforms.Resize((32, 32)), self.inference_transform])
+            #self.inference_transform = transforms.Compose([transforms.Resize(32), self.inference_transform])
             ##########################################################
             self.dataset_path = "data/stl10"
             self.trainset_for_train = torchvision.datasets.STL10(

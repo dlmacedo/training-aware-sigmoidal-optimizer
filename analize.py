@@ -51,18 +51,23 @@ torch.cuda.manual_seed(1000000)
 
 def main():
 
-    DATASETS = ['svhn', 'cifar10', 'cifar100']
+    #############################################################################
+    #############################################################################
+    DATASETS = ['cifar10', 'cifar100', 'svhn', 'stl10']
+    #############################################################################
+    #############################################################################
+
     EXTRA_DATASETS = [
         'svhn_250', 'svhn_500', 'svhn_1000', 'svhn_2000', 'svhn_3000', 'svhn_4000', 'svhn_5000',
         'cifar10_250', 'cifar10_500', 'cifar10_1000', 'cifar10_2000', 'cifar10_3000', 'cifar10_4000', 'cifar10_5000', 
         'cifar100_25', 'cifar100_50', 'cifar100_100', 'cifar100_200', 'cifar100_300', 'cifar100_400', 'cifar100_500',
         ]
 
-    ###################################################
-    ###################################################
-    MODELS = ['densenetbc100', 'resnet50','vgg19'] 
-    ###################################################
-    ###################################################
+    #############################################################################
+    #############################################################################
+    MODELS = ['resnet34', 'vgg19', 'resnet50', 'wideresnet3410', 'densenetbc100'] 
+    #############################################################################
+    #############################################################################
 
     """
     #LOSSES = ['sml1_na_id_no_no_no_no', 'dml10_pn2_id_no_no_no_no', 'eml1_pn2_id_no_no_lz0_10_ST_NO_0.01']
@@ -77,8 +82,8 @@ def main():
         }
     """
 
-    OPTIM = ['taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.6','taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.7','taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.8']
-    PRINT_OPTIM = ['TASO1','TASO2','TASO3']
+    #OPTIM = ['taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.6','taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.7','taso_l0.1_e5_w0.0001_m0.9_nt_a25_b0.8']
+    #PRINT_OPTIM = ['TASO1','TASO2','TASO3']
 
     PRINT_MODEL = {'densenetbc100': r'DenseNetBC100', 'resnet50': r'ResNet50', 'vgg19': r'VGG19'}
     PRINT_DATA = {'svhn': r'SVHN', 'cifar10': r'CIFAR10', 'cifar100': r'CIFAR100'}
@@ -93,7 +98,7 @@ def main():
     ##print(LOSSES_TEXTS)
     ##print(SVHN_LOSSES)
     ##print(SVHN_LOSSES_TEXTS)
-    print(OPTIM)
+    #print(OPTIM)
 
     args = parser.parse_args()
     path = os.path.join("expers", args.path)
@@ -128,7 +133,7 @@ def main():
         data_frame_list.append(pd.read_csv(file))
     raw_results_data_frame = pd.concat(data_frame_list)
     #raw_results_data_frame.to_csv(os.path.join(path, 'all_results_raw.csv'), index=False)
-    print(raw_results_data_frame[:30])
+    print(raw_results_data_frame)
 
 
     print("\n#####################################")
@@ -140,6 +145,13 @@ def main():
         #print(df)
         data_frame_list.append(pd.read_csv(file))
     best_results_data_frame = pd.concat(data_frame_list)
+    """
+    print("#########################")
+    print("#########################")
+    print(best_results_data_frame)
+    print("#########################")
+    print("#########################")
+    """
     best_results_data_frame.to_csv(os.path.join(path, 'all_results_best.csv'), index=False)
     #######################################################################################
     dfx = best_results_data_frame.loc[best_results_data_frame['DATA'].isin(EXTRA_DATASETS)]
@@ -159,8 +171,6 @@ def main():
                 best_results_data_frame['MODEL'].isin([model])
             ]
             #df = df[['OPTIM','TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1',]]
-            #df = df.sort_values('VALID ACC1', ascending=False)#.drop_duplicates(["LOSS"])
-            #print(df)
             dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].mean()
             dfx = dfx.rename(columns={'TRAIN LOSS': 'TRAIN LOSS MEAN', 'TRAIN ACC1': 'TRAIN ACC1 MEAN',
                 'VALID LOSS': 'VALID LOSS MEAN', 'VALID ACC1': 'VALID ACC1 MEAN'})

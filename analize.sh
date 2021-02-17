@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-python analize_taso.py --path pretune/cnn_train
+python analize.py --path pretune/cnn_train
