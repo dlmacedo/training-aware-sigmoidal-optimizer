@@ -22,6 +22,7 @@ import pickle
 import statistics
 from scipy.interpolate import interp1d 
 
+"""
 #######################
 #matplotlib.rcParams.update({'font.size': 24})
 #sns.set(font_scale=3)
@@ -33,7 +34,7 @@ sns.set_palette('muted')
 sns.set_context("paper")
 #sns.set_context("paper", font_scale=1.5)
 #######################
-
+"""
 
 pd.options.display.float_format = '{:,.4f}'.format
 pd.set_option('display.width', 160)
@@ -42,6 +43,11 @@ parser = argparse.ArgumentParser(description='Analize results in csv files')
 
 parser.add_argument('-p', '--path', default="", type=str, help='Path for the experiments to be analized')
 parser.set_defaults(argument=True)
+
+args = parser.parse_args()
+path = os.path.join("expers", args.path)
+if not os.path.exists(path):
+    sys.exit('You should pass a valid path to analyze!!!')
 
 random.seed(1000000)
 np.random.seed(1000000)
@@ -100,10 +106,66 @@ def main():
     ##print(SVHN_LOSSES_TEXTS)
     #print(OPTIM)
 
-    args = parser.parse_args()
-    path = os.path.join("expers", args.path)
-    if not os.path.exists(path):
-        sys.exit('You should pass a valid path to analyze!!!')
+    ############################################################################
+    ############################################################################
+    #sns.set_context("paper", font_scale=1.6)
+    print("\n###########################")
+    print("####### PLOT TASO #########")
+    print("###########################")
+    
+    x = np.linspace(0,100,100)
+    y = 1/(1 + np.exp(40*((x/100)-0.6))) + 0.001
+
+    #fig = plt.figure()
+    #ax = fig.add_subplot(1, 1, 1)
+    fig, ax = plt.subplots()
+
+    # We need to draw the canvas, otherwise the labels won't be positioned and won't have values yet.
+    fig.canvas.draw()
+    ax.set_xticks([0,25,50,75,100])
+    labels = [item.get_text() for item in ax.get_xticklabels()]
+    labels[0] = '0'
+    labels[1] = r'$E_F/4$'
+    labels[2] = r'$E_F/2$'
+    labels[3] = r'$3E_F/4$'
+    labels[4] = r'$E_F$'
+    ax.set_xticklabels(labels)
+    ax.set_yticks([1])
+    labels = [item.get_text() for item in ax.get_yticklabels()]
+    labels[0] = r'$LR_I$'
+    ax.set_yticklabels(labels)
+
+    ax.axvline(55, color='red', linestyle='dashed')
+    ax.set_xlabel('Epochs')
+    ax.set_ylabel('Learning Rate')
+    ax.set_title('Training Aware Sigmoidal Optimization')
+
+    label = r'$\mathrm{LR}=\frac{\mathrm{LR_I}}{1+\exp\left(\alpha \left(\frac{\mathrm{E}}{\mathrm{E_F}}-\beta\right)\right)}+\mathrm{LR_F}$'
+    plt.plot(x, y, 'y', label=label, color='blue')  
+    plt.legend(loc='lower left', fontsize=11)
+    #with sns.axes_style("white"):
+    #    plt.legend(loc='lower right', bbox_to_anchor=(1, -0.25), ncol=6, fontsize=13)
+
+    #plt.show()
+    plt.savefig(os.path.join(path, 'plot_taso_curve.png'), bbox_inches='tight', dpi=300)
+    plt.close()
+    ############################################################################
+    ############################################################################
+
+
+    #######################
+    #matplotlib.rcParams.update({'font.size': 24})
+    #sns.set(font_scale=3)
+    ##plt.rc('font', weight="medium")
+    ##plt.rc('text', usetex=True)
+    sns.set_style('darkgrid')
+    sns.set_palette('muted')
+    #sns.set_context("notebook", font_scale=1.5, rc={"lines.linewidth": 2.5})
+    sns.set_context("paper")
+    #sns.set_context("paper", font_scale=1.5)
+    #######################
+
+
 
 
     print("\n#####################################")
