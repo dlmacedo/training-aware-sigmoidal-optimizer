@@ -125,22 +125,24 @@ def main():
     ax.set_xticks([0,25,50,75,100])
     labels = [item.get_text() for item in ax.get_xticklabels()]
     labels[0] = '0'
-    labels[1] = r'$E_F/4$'
-    labels[2] = r'$E_F/2$'
-    labels[3] = r'$3E_F/4$'
-    labels[4] = r'$E_F$'
+    labels[1] = r'$\mathrm{E_F}/4$'
+    labels[2] = r'$\mathrm{E_F}/2$'
+    labels[3] = r'$\mathrm{3E_F}/4$'
+    labels[4] = r'$\mathrm{E_F}$'
     ax.set_xticklabels(labels)
-    ax.set_yticks([1])
-    labels = [item.get_text() for item in ax.get_yticklabels()]
-    labels[0] = r'$LR_I$'
-    ax.set_yticklabels(labels)
+    #ax.set_yticks([1])
+    #labels = [item.get_text() for item in ax.get_yticklabels()]
+    #labels[0] = r'$\mathrm{LR_I}$'
+    ax.set_yticklabels([])
 
     ax.axvline(55, color='red', linestyle='dashed')
     ax.set_xlabel('Epochs')
     ax.set_ylabel('Learning Rate')
     ax.set_title('Training Aware Sigmoidal Optimization')
 
-    label = r'$\mathrm{LR}=\frac{\mathrm{LR_I}}{1+\exp\left(\alpha \left(\frac{\mathrm{E}}{\mathrm{E_F}}-\beta\right)\right)}+\mathrm{LR_F}$'
+    #label = r'$\mathrm{LR}=\frac{\mathrm{LR_I}}{1+\exp\left(\alpha \left(\frac{\mathrm{E}}{\mathrm{E_F}}-\beta\right)\right)}+\mathrm{LR_F}$'
+    label = r'$\mathrm{LR}=\frac{\mathrm{LR_I}}{1+\exp\left(\alpha \left(\mathrm{E}/\mathrm{E_F}-\beta\right)\right)}+\mathrm{LR_F}$'
+    #label = r'$LR=\frac{LR_I}{1+\exp\left(\alpha \left(\frac{E}{E_F}-\beta\right)\right)}+LR_F$'
     plt.plot(x, y, 'y', label=label, color='blue')  
     plt.legend(loc='lower left', fontsize=11)
     #with sns.axes_style("white"):
