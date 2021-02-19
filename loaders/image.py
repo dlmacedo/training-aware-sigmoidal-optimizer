@@ -72,10 +72,12 @@ class ImageLoader:
             self.mnist = True
             self.normalize = transforms.Normalize((0.1307,), (0.3081,))
             self.train_transform = transforms.Compose([
+                transforms.Resize(32),
                 transforms.ToTensor(),
                 self.normalize,
             ])
             self.inference_transform = transforms.Compose([
+                transforms.Resize(32),
                 transforms.ToTensor(),
                 self.normalize,
             ])
@@ -85,6 +87,27 @@ class ImageLoader:
             self.trainset_for_infer = torchvision.datasets.MNIST(
                 root=self.dataset_path, train=True, download=True, transform=self.inference_transform)
             self.val_set = torchvision.datasets.MNIST(
+                root=self.dataset_path, train=False, download=True, transform=self.inference_transform)
+
+        elif args.dataset == "fashionmnist":
+            self.mnist = True
+            self.normalize = transforms.Normalize((0.2860,), (0.3530,))
+            self.train_transform = transforms.Compose([
+                transforms.Resize(32),
+                transforms.ToTensor(),
+                self.normalize,
+            ])
+            self.inference_transform = transforms.Compose([
+                transforms.Resize(32),
+                transforms.ToTensor(),
+                self.normalize,
+            ])
+            self.dataset_path = "data/fashionmnist"
+            self.trainset_for_train = torchvision.datasets.FashionMNIST(
+                root=self.dataset_path, train=True, download=True, transform=self.train_transform)
+            self.trainset_for_infer = torchvision.datasets.FashionMNIST(
+                root=self.dataset_path, train=True, download=True, transform=self.inference_transform)
+            self.val_set = torchvision.datasets.FashionMNIST(
                 root=self.dataset_path, train=False, download=True, transform=self.inference_transform)
 
         elif args.dataset == "cifar10":

@@ -22,6 +22,10 @@ import pickle
 import statistics
 from scipy.interpolate import interp1d 
 
+#import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+#import matplotlib.pyplot as plt
+
 """
 #######################
 #matplotlib.rcParams.update({'font.size': 24})
@@ -155,6 +159,69 @@ def main():
     ############################################################################
 
 
+    ############################################################################
+    ############################################################################
+    #sns.set_context("paper", font_scale=1.6)
+    print("\n#########################################")
+    print("####### PLOT SADDLE AND MINIMUM #########")
+    print("#########################################")
+
+    #fig = plt.figure(figsize=(3, 6))
+    fig = plt.figure()   
+    ax = fig.add_subplot(111, projection='3d')
+    #ax = plt.subplot(2, 1, 1, projection='3d')
+    plot_args = {'rstride': 1, 'cstride': 1, 'cmap':"Blues_r", 'linewidth': 0.4, 'antialiased': True, 'vmin': -1, 'vmax': 1}
+    x, y = np.mgrid[-1:1:31j, -1:1:31j]
+    z = 0.5*x**2 - 0.5*y**2
+    #z = 0.5*x**2 + 0.5*y**2 - 1
+    ax.plot_surface(x, y, z, **plot_args)
+    #ax.plot([0], [0], [0], 'ro')
+    ax.view_init(azim=-60, elev=30)
+    ax.set_xlim(-1, 1)
+    ax.set_ylim(-1, 1)
+    ax.set_zlim(-1, 1)
+    plt.xticks([-1, -0.5, 0, 0.5, 1], [r"$-1$", r"$-1/2$", r"$0$", r"$1/2$", r"$1$"])
+    plt.yticks([-1, -0.5, 0, 0.5, 1], [r"$-1$", r"$-1/2$", r"$0$", r"$1/2$", r"$1$"])
+    ax.set_zticks([-1, -0.5, 0, 0.5, 1])
+    ax.set_zticklabels([r"$-1$", r"$-1/2$", r"$0$", r"$1/2$", r"$1$"])
+    ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
+    ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
+    ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+    #plt.savefig("Saddle_point.svg", bbox_inches="tight", transparent=True)
+    plt.savefig(os.path.join(path, 'plot_saddle_point.png'), bbox_inches='tight', dpi=300)
+    plt.show()
+    plt.close()
+
+    #fig = plt.figure(figsize=(3, 6))
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    #ax = plt.subplot(2, 1, 2, projection='3d')
+    plot_args = {'rstride': 1, 'cstride': 1, 'cmap':"Blues_r", 'linewidth': 0.4, 'antialiased': True, 'vmin': -1, 'vmax': 1}
+    x, y = np.mgrid[-1:1:31j, -1:1:31j]
+    #z = 0.5*x**2 - 0.5*y**2
+    z = 0.5*x**2 + 0.5*y**2 - 1
+    ax.plot_surface(x, y, z, **plot_args)
+    #ax.plot([0], [0], [0], 'ro')
+    ax.view_init(azim=-60, elev=30)
+    ax.set_xlim(-1, 1)
+    ax.set_ylim(-1, 1)
+    ax.set_zlim(-1, 1)
+    plt.xticks([-1, -0.5, 0, 0.5, 1], [r"$-1$", r"$-1/2$", r"$0$", r"$1/2$", r"$1$"])
+    plt.yticks([-1, -0.5, 0, 0.5, 1], [r"$-1$", r"$-1/2$", r"$0$", r"$1/2$", r"$1$"])
+    ax.set_zticks([-1, -0.5, 0, 0.5, 1])
+    ax.set_zticklabels([r"$-1$", r"$-1/2$", r"$0$", r"$1/2$", r"$1$"])
+    ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
+    ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0)) 
+    ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+    #plt.savefig("Saddle_point.svg", bbox_inches="tight", transparent=True)
+    plt.savefig(os.path.join(path, 'plot_local_minimum.png'), bbox_inches='tight', dpi=300)
+    plt.show()
+    plt.close()
+    ############################################################################
+    ############################################################################
+
+
+
     #######################
     #matplotlib.rcParams.update({'font.size': 24})
     #sns.set(font_scale=3)
@@ -242,8 +309,10 @@ def main():
                 'VALID LOSS': 'VALID LOSS MEAN', 'VALID ACC1': 'VALID ACC1 MEAN'})
             dfx = dfx.sort_values('VALID ACC1 MEAN', ascending=False)#.drop_duplicates(["LOSS"])
             print(dfx)
-            #dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg([np.mean, np.std])
-            #print(dfx)
+            print()
+            #dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg([np.mean, np.std, np.count])
+            dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg(['mean', 'std', 'count'])
+            print(dfx)
             ####df.to_csv(os.path.join(path, data+'+'+model+'+results_best.csv'), index=False)
             ####df = df.rename(columns={'VALID INTRA_LOGITS MEAN': 'VIALM', 'VALID INTER_LOGITS MEAN': 'VIELM'})
             print("########\n")

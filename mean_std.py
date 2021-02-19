@@ -8,7 +8,7 @@ import loaders
 from torchvision.datasets import ImageFolder
 
 
-dataset_names = ('cifar10', 'cifar100', 'mnist', 'stl10', 'svhn', 'imagenet32')
+dataset_names = ('cifar10', 'cifar100', 'mnist', 'stl10', 'svhn', 'imagenet32', 'fashionmnist')
 
 parser = argparse.ArgumentParser(description='Calculate Mean Standard')
 
@@ -51,6 +51,12 @@ elif args.dataset == "stl10":
 
 elif args.dataset == "mnist":
     train_set = torchvision.datasets.MNIST(root='data/mnist', train=True, download=True, transform=train_transform)
+    print(list(train_set.train_data.size()))
+    print(train_set.train_data.float().mean()/255)
+    print(train_set.train_data.float().std()/255)
+
+elif args.dataset == "fashionmnist":
+    train_set = torchvision.datasets.FashionMNIST(root='data/fashionmnist', train=True, download=True, transform=train_transform)
     print(list(train_set.train_data.size()))
     print(train_set.train_data.float().mean()/255)
     print(train_set.train_data.float().std()/255)
