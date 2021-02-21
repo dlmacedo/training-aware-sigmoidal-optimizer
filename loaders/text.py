@@ -115,7 +115,7 @@ class Dataset(object):
             batch_size=self.args.batch_size,
             sort_key=lambda x: len(x.text),
             repeat=False,
-            shuffle=True)
+            shuffle=False)
         
         self.val_iterator, self.test_iterator = data.BucketIterator.splits(
             (val_data, test_data),

@@ -2474,3 +2474,13 @@ cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,98,TRAIN,ACC1,98.42
 cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,98,HYPER,LR,0.01
 cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,98,VALID,LOSS,0.8085266452074051
 cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,98,VALID,ACC1,85.08
+cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,99,TRAIN,LOSS,0.04585246032729745
+cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,99,TRAIN,ACC1,98.396
+cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,99,HYPER,LR,0.01
+cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,99,VALID,LOSS,0.744853817653656
+cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,99,VALID,ACC1,85.15
+cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,100,TRAIN,LOSS,0.04162083391457796
+cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,100,TRAIN,ACC1,98.554
+cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,100,HYPER,LR,0.01
+cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,100,VALID,LOSS,0.6065949919223785
+cifar10,resnet34,adagrad_l0.01_e100_w0_d0_a0.1,5,100,VALID,ACC1,87.53

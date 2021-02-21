@@ -1,11 +1,1 @@
 DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
-agnews,s2satt,adagrad_l0.01_e2_w0_d0_a0,1,1,TRAIN,LOSS,0.39509625057892583
-agnews,s2satt,adagrad_l0.01_e2_w0_d0_a0,1,1,TRAIN,ACC1,87.59479166666667
-agnews,s2satt,adagrad_l0.01_e2_w0_d0_a0,1,1,HYPER,LR,0.01
-agnews,s2satt,adagrad_l0.01_e2_w0_d0_a0,1,1,VALID,LOSS,0.32645140052770955
-agnews,s2satt,adagrad_l0.01_e2_w0_d0_a0,1,1,VALID,ACC1,89.07894736842105
-agnews,s2satt,adagrad_l0.01_e2_w0_d0_a0,1,2,TRAIN,LOSS,0.3300727663003323
-agnews,s2satt,adagrad_l0.01_e2_w0_d0_a0,1,2,TRAIN,ACC1,89.64270833333333
-agnews,s2satt,adagrad_l0.01_e2_w0_d0_a0,1,2,HYPER,LR,0.01
-agnews,s2satt,adagrad_l0.01_e2_w0_d0_a0,1,2,VALID,LOSS,0.3057094891662767
-agnews,s2satt,adagrad_l0.01_e2_w0_d0_a0,1,2,VALID,ACC1,89.82894736842105
