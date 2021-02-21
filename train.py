@@ -134,24 +134,89 @@ def main():
                     elif config[0] == "model":
                         args.model_name = str(config[1])
                         print("MODEL:", args.model_name.upper())
+                        if args.model_name == "textcnn":
+                            class TextCNNConfig(object):
+                                embed_size = 300
+                                num_channels = 100
+                                kernel_size = [3,4,5]
+                                output_size = 4
+                                #max_epochs = 15
+                                #lr = 0.3
+                                #batch_size = 64
+                                max_sen_len = 30 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+                                dropout_keep = 0.8
+                            args.text_config = TextCNNConfig()
+                        #elif args.model_name == "textrnn":
+                        #    class TextRNNConfig(object):
+                        #        embed_size = 300
+                        #        hidden_layers = 2
+                        #        hidden_size = 32
+                        #        bidirectional = True
+                        #        output_size = 4
+                        #        #max_epochs = 10
+                        #        #lr = 0.25
+                        #        #batch_size = 64
+                        #        max_sen_len = 20 # Sequence length for RNN
+                        #        dropout_keep = 0.8
+                        #    args.text_config = TextRNNConfig()
+                        elif args.model_name == "rcnn":
+                            class RCNNConfig(object):
+                                embed_size = 300
+                                hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+                                hidden_size = 64
+                                output_size = 4
+                                #max_epochs = 15
+                                hidden_size_linear = 64
+                                #lr = 0.5
+                                #batch_size = 128
+                                ######################
+                                #seq_len = None # Sequence length for RNN
+                                ######################
+                                max_sen_len = None
+                                ######################
+                                dropout_keep = 0.8                                
+                            args.text_config = RCNNConfig()
+                        elif args.model_name == "s2satt":
+                            class S2SAttConfig(object):
+                                embed_size = 300
+                                hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+                                hidden_size = 32
+                                bidirectional = True
+                                output_size = 4
+                                #max_epochs = 15
+                                #lr = 0.5
+                                #batch_size = 128
+                                dropout_keep = 0.8
+                                max_sen_len = None # Sequence length for RNN
+                            args.text_config = S2SAttConfig()
                     elif config[0] == "optim":
                         args.optim = str(config[1])
                         print("OPTIM:", args.optim.upper())
 
                 if args.dataset == "mnist":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 10
+                    args.data_type = "image"
                 elif args.dataset == "cifar10":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 10
+                    args.data_type = "image"
                 elif args.dataset == "cifar100":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 100
+                    args.data_type = "image"
                 elif args.dataset == "svhn":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 10
+                    args.data_type = "image"
                 elif args.dataset == "stl10":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 10
+                    args.data_type = "image"
                 elif args.dataset == "imagenet32":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
+                    args.data_type = "image"
                 elif args.dataset == "imagenet2012":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
+                    args.data_type = "image"
+                elif args.dataset == "agnews":
+                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
+                    args.data_type = "text"
 
                 #args.experiment_alternative_path = os.path.join("pretrained", args.exp_input, args.loss)
                 #if not os.path.exists(args.experiment_alternative_path):

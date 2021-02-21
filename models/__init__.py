@@ -6,3 +6,7 @@ from .wideresnet import *
 from .resnet_ import *
 from .efficientnet import *
 from .lenet import *
+from .textcnn import *
+#from .textrnn import *
+from .rcnn import *
+from .s2satt import *

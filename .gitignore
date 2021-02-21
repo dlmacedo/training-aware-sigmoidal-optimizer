@@ -18,3 +18,4 @@ models/__pycache__
 *.adv
 *.log
 *.pkl
+*.pt

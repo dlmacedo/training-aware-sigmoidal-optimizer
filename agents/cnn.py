@@ -24,6 +24,8 @@ from sklearn.metrics.cluster import homogeneity_completeness_v_measure
 import matplotlib.pyplot as plt
 #import data_loader
 import pickle
+from torchinfo import summary
+
 
 sns.set(style="darkgrid")
 
@@ -37,14 +39,23 @@ class CNNAgent:
         self.cluster_predictions_transformation = []
 
         # create dataset
-        image_loaders = loaders.ImageLoader(args)
-        (self.trainset_first_partition_loader_for_train,
-         self.trainset_second_partition_loader_for_train,
-         self.trainset_first_partition_loader_for_infer,
-         self.trainset_second_partition_loader_for_infer,
-         self.valset_loader, self.normalize) = image_loaders.get_loaders()
-        self.batch_normalize = loaders.BatchNormalize(
-            self.normalize.mean, self.normalize.std, inplace=True, device=torch.cuda.current_device())
+        if self.args.data_type == 'image':
+            image_loaders = loaders.ImageLoader(args)
+            (self.trainset_first_partition_loader_for_train,
+            self.trainset_second_partition_loader_for_train,
+            self.trainset_first_partition_loader_for_infer,
+            self.trainset_second_partition_loader_for_infer,
+            self.valset_loader, self.normalize) = image_loaders.get_loaders()
+            self.batch_normalize = loaders.BatchNormalize(
+                self.normalize.mean, self.normalize.std, inplace=True, device=torch.cuda.current_device())
+        elif self.args.data_type == 'text':
+            text_loaders = loaders.TextLoader(args)
+            (self.trainset_first_partition_loader_for_train,
+            self.trainset_second_partition_loader_for_train,
+            self.trainset_first_partition_loader_for_infer,
+            self.trainset_second_partition_loader_for_infer,
+            self.valset_loader, self.normalize) = text_loaders.get_loaders()
+
         if self.args.partition == "1":
             self.trainset_loader_for_train = self.trainset_first_partition_loader_for_train
         elif self.args.partition == "2":
@@ -87,6 +98,21 @@ class CNNAgent:
         elif self.args.model_name == "efficientnetb0":
             self.model = models.EfficientNet(
                 num_classes=self.args.number_of_model_classes, width_coefficient=1.0, depth_coefficient=1.0, dropout_rate=0.2)
+        #############################################################################################################################
+        #############################################################################################################################
+        elif self.args.model_name == "textcnn":
+            self.model = models.TextCNN(
+                self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+        #elif self.args.model_name == "textrnn":
+        #    self.model = models.TextRNN(
+        #        self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+        elif self.args.model_name == "rcnn":
+            self.model = models.RCNN(
+                self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+        elif self.args.model_name == "s2satt":
+            self.model = models.Seq2SeqAttention(
+                self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+
         self.model.cuda()
         torch.manual_seed(self.args.base_seed)
         torch.cuda.manual_seed(self.args.base_seed)
@@ -96,8 +122,15 @@ class CNNAgent:
             print("\nMODEL:", self.model)
             with open(os.path.join(self.args.experiment_path, 'model.arch'), 'w') as file:
                 print(self.model, file=file)
+        
 
         print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        #collect_batch = next(iter(self.trainset_loader_for_train))
+        #if self.args.data_type == "image":
+        #    input_data = collect_batch[0][0]#.cuda()
+        #elif self.args.data_type == "text":
+        #    input_data = collect_batch[0].text#.cuda()
+        #summary(self.model, input_data=input_data[0])
         utils.print_num_params(self.model)
         print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
@@ -368,8 +401,19 @@ class CNNAgent:
         #epoch_metrics = {"max_probs": [], "entropies": []}
         ##epoch_entropies_per_classes =  [[] for i in range(self.model.classifier.weights.size(0))]
 
-        for batch_index, (inputs, targets) in enumerate(self.trainset_loader_for_train):
+        #for batch_index, (inputs, targets) in enumerate(self.trainset_loader_for_train):
+        for batch_index, batch_data in enumerate(self.trainset_loader_for_train):
             batch_index += 1
+
+            # compatibilize...
+            if self.args.data_type == "image":
+                inputs = batch_data[0]
+                targets = batch_data[1]
+            elif self.args.data_type == "text":
+                #inputs = batch_data.text.cuda()
+                #targets = (batch_data.label - 1).type(torch.cuda.LongTensor)
+                inputs = batch_data.text
+                targets = (batch_data.label - 1).type(torch.LongTensor)
 
             # moving to GPU...
             inputs = inputs.cuda()
@@ -420,15 +464,24 @@ class CNNAgent:
         loss_meter = utils.MeanMeter()
         #odd_loss_meter = utils.MeanMeter()
         accuracy_meter = tnt.meter.ClassErrorMeter(topk=[1], accuracy=True)
-        odd_accuracy_meter = tnt.meter.ClassErrorMeter(topk=[1], accuracy=True)
-        epoch_logits = {"intra": [], "inter": []}
-        epoch_metrics = {"max_probs": [], "entropies": []}
+        #odd_accuracy_meter = tnt.meter.ClassErrorMeter(topk=[1], accuracy=True)
+        #epoch_logits = {"intra": [], "inter": []}
+        #epoch_metrics = {"max_probs": [], "entropies": []}
         #epoch_entropies_per_classes =  [[] for i in range(self.model.classifier.weights.size(0))]
 
         with torch.no_grad():
 
-            for batch_index, (inputs, targets) in enumerate(self.valset_loader):
+            #for batch_index, (inputs, targets) in enumerate(self.valset_loader):
+            for batch_index, batch_data in enumerate(self.valset_loader):
                 batch_index += 1
+
+                # compatibilize...
+                if self.args.data_type == "image":
+                    inputs = batch_data[0]
+                    targets = batch_data[1]
+                elif self.args.data_type == "text":
+                    inputs = batch_data.text.cuda()
+                    targets = (batch_data.label - 1).type(torch.cuda.LongTensor)
 
                 # moving to GPU...
                 inputs = inputs.cuda()
