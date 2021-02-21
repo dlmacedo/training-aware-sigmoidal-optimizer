@@ -142,7 +142,7 @@ def main():
     ax.axvline(55, color='red', linestyle='dashed')
     ax.set_xlabel('Epochs')
     ax.set_ylabel('Learning Rate')
-    ax.set_title('Training Aware Sigmoidal Optimization')
+    #ax.set_title('Training Aware Sigmoidal Optimization')
 
     #label = r'$\mathrm{LR}=\frac{\mathrm{LR_I}}{1+\exp\left(\alpha \left(\frac{\mathrm{E}}{\mathrm{E_F}}-\beta\right)\right)}+\mathrm{LR_F}$'
     label = r'$\mathrm{LR}=\frac{\mathrm{LR_I}}{1+\exp\left(\alpha \left(\mathrm{E}/\mathrm{E_F}-\beta\right)\right)}+\mathrm{LR_F}$'
@@ -189,7 +189,7 @@ def main():
     ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
     #plt.savefig("Saddle_point.svg", bbox_inches="tight", transparent=True)
     plt.savefig(os.path.join(path, 'plot_saddle_point.png'), bbox_inches='tight', dpi=300)
-    plt.show()
+    #plt.show()
     plt.close()
 
     #fig = plt.figure(figsize=(3, 6))
@@ -215,7 +215,7 @@ def main():
     ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
     #plt.savefig("Saddle_point.svg", bbox_inches="tight", transparent=True)
     plt.savefig(os.path.join(path, 'plot_local_minimum.png'), bbox_inches='tight', dpi=300)
-    plt.show()
+    #plt.show()
     plt.close()
     ############################################################################
     ############################################################################
