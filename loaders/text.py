@@ -7,6 +7,7 @@ from torchvision.datasets import ImageFolder
 from torch.utils.data.sampler import SubsetRandomSampler
 from torch.utils.data import DataLoader
 #import torch.utils.data as data
+from torch.utils.data.dataset import random_split
 import torchtext.data as data
 import torchtext.datasets as datasets
 from torchtext.vocab import GloVe
@@ -72,11 +73,16 @@ class Dataset(object):
         ############################
 
         # Creating Field for data
-        TEXT = data.Field(sequential=True, tokenize=tokenizer, lower=True, fix_length=self.config.max_sen_len)
-        #TEXT = data.Field(sequential=True, tokenize='spacy', lower=True, fix_length=self.config.max_sen_len)
-        LABEL = data.Field(sequential=False, use_vocab=False)
-        
+        #TEXT = data.Field(sequential=True, tokenize=tokenizer, lower=True, fix_length=self.config.max_sen_len, batch_first=False)
+        #LABEL = data.Field(sequential=False, use_vocab=False)
+        ##TEXT = data.Field(sequential=True, tokenize='spacy', lower=True, fix_length=self.config.max_sen_len)
+        TEXT = data.Field(
+            sequential=True, tokenize=tokenizer, lower=True, fix_length=self.config.max_sen_len,
+            include_lengths=False, batch_first=False)
+        LABEL = data.Field(sequential=False)
+
         ##################################################################################################
+        #"""
         datafields = [("text",TEXT),("label",LABEL)]
         # Load data from pd.DataFrame into torchtext.data.Dataset
         train_df = self.get_pandas_df(train_file)
@@ -86,25 +92,31 @@ class Dataset(object):
         test_df = self.get_pandas_df(test_file)
         test_examples = [data.Example.fromlist(i, datafields) for i in test_df.values.tolist()]
         test_data = data.Dataset(test_examples, datafields)
+        #"""
         ##################################################################################################
         
+        #DATASET = datasets.AG_NEWS()
         #train_data, test_data = datasets.AG_NEWS.splits(TEXT, LABEL)
+        #train_data, test_data = datasets.AG_NEWS()
+        ###############################################train_data, test_data = datasets.IMDB.splits(TEXT, LABEL)
         ####train_data, test_data = datasets.YelpReviewFull.iters(batch_size=4)
         #train_data, test_data = datasets.YelpReviewFull.splits(TEXT, LABEL)
         
         ##################################################################################################
         # If validation file exists, load it. Otherwise get validation data from training data
+        """
         if val_file:
             val_df = self.get_pandas_df(val_file)
             val_examples = [data.Example.fromlist(i, datafields) for i in val_df.values.tolist()]
             val_data = data.Dataset(val_examples, datafields)
         else:
             train_data, val_data = train_data.split(split_ratio=0.8)
+        """
         ##################################################################################################
         
-        TEXT.build_vocab(train_data, vectors=Vectors(w2v_file))
-        #TEXT.build_vocab(train_data, vectors=GloVe(name='840B', dim=300))
-        #LABEL.build_vocab(train_data)
+        #TEXT.build_vocab(train_data, vectors=Vectors(w2v_file))
+        TEXT.build_vocab(train_data, vectors=GloVe(name='840B', dim=300))
+        LABEL.build_vocab(train_data)
         self.word_embeddings = TEXT.vocab.vectors
         self.vocab = TEXT.vocab
 
@@ -115,10 +127,20 @@ class Dataset(object):
             batch_size=self.args.batch_size,
             sort_key=lambda x: len(x.text),
             repeat=False,
-            shuffle=False)
+            shuffle=True)
         
+        """
         self.val_iterator, self.test_iterator = data.BucketIterator.splits(
             (val_data, test_data),
+            #batch_size=self.config.batch_size,
+            batch_size=self.args.batch_size,
+            sort_key=lambda x: len(x.text),
+            repeat=False,
+            shuffle=False)
+        """
+
+        self.test_iterator = data.BucketIterator(
+            (test_data),
             #batch_size=self.config.batch_size,
             batch_size=self.args.batch_size,
             sort_key=lambda x: len(x.text),
@@ -137,7 +159,7 @@ class Dataset(object):
 
         print ("Loaded {} training examples".format(len(train_data)))
         print ("Loaded {} test examples".format(len(test_data)))
-        print ("Loaded {} validation examples".format(len(val_data)))
+        #print ("Loaded {} validation examples".format(len(val_data)))
 
 
 """
@@ -162,7 +184,7 @@ class TextLoader:
 
         self.args = args
 
-        if args.dataset == "agnews":
+        if self.args.dataset == "agnews":
             train_file = 'data/agnews/ag_news.train'
             test_file = 'data/agnews/ag_news.test'  
             w2v_file = 'data/agnews/glove.840B.300d.txt'
@@ -192,17 +214,60 @@ class TextLoader:
                 root=self.dataset_path, train=False, download=True, transform=self.inference_transform)
             """
 
+        if self.args.dataset == "yelprf":
+            self.train_set, self.test_set = datasets.YelpReviewFull()
+            # split train_dataset into train and valid
+            #train_len = int(len(self.train_set) * 0.95)
+            #self.train_set_less_valid, self.valid_set = random_split(self.train_set, [train_len, len(self.train_set) - train_len])
+    
 
 
     def get_loaders(self):
 
+        if self.args.dataset == "yelprf":
+            self.train_loader = DataLoader(
+                self.train_set, batch_size=self.args.batch_size, shuffle=True,
+                collate_fn=self.generate_batch, num_workers=self.args.workers, worker_init_fn=self._worker_init)
+            self.test_loader = DataLoader(
+                self.test_set, batch_size=self.args.batch_size,
+                collate_fn=self.generate_batch, worker_init_fn=self._worker_init)
+            return self.train_loader, None, None, None, self.test_loader, None
 
 
         return (self.args.text_dataset.train_iterator, None,
-                self.args.text_dataset.train_iterator, None,
+                #self.args.text_dataset.train_iterator, None,
+                None, None,
                 self.args.text_dataset.test_iterator, None)
 
 
     def _worker_init(self, worker_id):
         random.seed(self.args.base_seed)
 
+
+    def generate_batch(self, batch):
+        r"""
+        Since the text entries have different lengths, a custom function
+        generate_batch() is used to generate data batches and offsets,
+        which are compatible with EmbeddingBag. The function is passed
+        to 'collate_fn' in torch.utils.data.DataLoader. The input to
+        'collate_fn' is a list of tensors with the size of batch_size,
+        and the 'collate_fn' function packs them into a mini-batch.
+        Pay attention here and make sure that 'collate_fn' is declared
+        as a top level def. This ensures that the function is available
+        in each worker.
+
+        Output:
+            text: the text entries in the data_batch are packed into a list and
+                concatenated as a single tensor for the input of nn.EmbeddingBag.
+            offsets: the offsets is a tensor of delimiters to represent the beginning
+                index of the individual sequence in the text tensor.
+            cls: a tensor saving the labels of individual text entries.
+        """
+        label = torch.tensor([entry[0] for entry in batch])
+        text = [entry[1] for entry in batch]
+        #print(len(text))
+        #print(text[0])
+        offsets = [0] + [len(entry) for entry in text]
+        offsets = torch.tensor(offsets[:-1]).cumsum(dim=0)
+        text = torch.cat(text)
+        return text, offsets, label

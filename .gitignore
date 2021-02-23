@@ -2,6 +2,7 @@
 lib/__pycache__
 preprocessing/*
 data/*
+.data/*
 output/*
 libs/__pycache__
 libs/transformations/__pycache__
@@ -18,4 +19,7 @@ models/__pycache__
 *.adv
 *.log
 *.pkl
+*.zip
+*.tar
 *.pt
+*.gz

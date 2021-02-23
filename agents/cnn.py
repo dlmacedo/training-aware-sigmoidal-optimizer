@@ -100,19 +100,25 @@ class CNNAgent:
                 num_classes=self.args.number_of_model_classes, width_coefficient=1.0, depth_coefficient=1.0, dropout_rate=0.2)
         #############################################################################################################################
         #############################################################################################################################
+        elif self.args.model_name == "textrnn":
+            self.model = models.TextRNN(
+                self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+        ##############################################################
         elif self.args.model_name == "textcnn":
             self.model = models.TextCNN(
                 self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
-        #elif self.args.model_name == "textrnn":
-        #    self.model = models.TextRNN(
-        #        self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
         elif self.args.model_name == "rcnn":
             self.model = models.RCNN(
                 self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
         elif self.args.model_name == "s2satt":
             self.model = models.Seq2SeqAttention(
                 self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
-
+        elif self.args.model_name == "fasttext":
+            embed_dim = 64
+            self.model = models.FastText(
+                #self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+                #len(train_dataset.get_vocab()), embed_dim, len(train_dataset.get_labels()))
+                len(text_loaders.train_set.get_vocab()), embed_dim, len(text_loaders.train_set.get_labels()))
         self.model.cuda()
         torch.manual_seed(self.args.base_seed)
         torch.cuda.manual_seed(self.args.base_seed)
@@ -410,10 +416,20 @@ class CNNAgent:
                 inputs = batch_data[0]
                 targets = batch_data[1]
             elif self.args.data_type == "text":
-                #inputs = batch_data.text.cuda()
-                #targets = (batch_data.label - 1).type(torch.cuda.LongTensor)
-                inputs = batch_data.text
-                targets = (batch_data.label - 1).type(torch.LongTensor)
+                if self.args.dataset_full in ['yelprf']:
+                    inputs = batch_data[0]
+                    #print(inputs.size())
+                    #print(inputs)
+                    offsets = batch_data[1].cuda()
+                    #print(offsets.size())
+                    #print(offsets)
+                    targets = batch_data[2]
+                    #print(targets.size())
+                    #print(targets)
+                else:
+                    inputs = batch_data.text
+                    targets = (batch_data.label - 1).type(torch.LongTensor)
+
 
             # moving to GPU...
             inputs = inputs.cuda()
@@ -425,7 +441,13 @@ class CNNAgent:
             #print("############\n")
 
             # compute output
-            outputs = self.model(inputs)
+            if self.args.model_name == 'fasttext':
+                outputs = self.model(inputs, offsets)
+            else:
+                outputs = self.model(inputs)
+            #print("$$$$$$$$$$$$$")
+            #print(outputs.size())
+            #print("$$$$$$$$$$$$$")
 
             # compute loss
             loss = self.criterion(outputs, targets)
@@ -480,15 +502,29 @@ class CNNAgent:
                     inputs = batch_data[0]
                     targets = batch_data[1]
                 elif self.args.data_type == "text":
-                    inputs = batch_data.text.cuda()
-                    targets = (batch_data.label - 1).type(torch.cuda.LongTensor)
+                    if self.args.dataset_full in ['yelprf']:
+                        inputs = batch_data[0]
+                        #print(inputs.size())
+                        #print(inputs)
+                        offsets = batch_data[1].cuda()
+                        #print(offsets.size())
+                        #print(offsets)
+                        targets = batch_data[2]
+                        #print(targets.size())
+                        #print(targets)
+                    else:
+                        inputs = batch_data.text
+                        targets = (batch_data.label - 1).type(torch.LongTensor)
 
                 # moving to GPU...
                 inputs = inputs.cuda()
                 targets = targets.cuda(non_blocking=True)
 
                 # compute output
-                outputs = self.model(inputs)
+                if self.args.model_name == 'fasttext':
+                    outputs = self.model(inputs, offsets)
+                else:
+                    outputs = self.model(inputs)
 
                 # compute loss
                 loss = self.criterion(outputs, targets)

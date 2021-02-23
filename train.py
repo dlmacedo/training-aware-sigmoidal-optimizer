@@ -26,7 +26,7 @@ pd.set_option('display.width', 160)
 
 parser = argparse.ArgumentParser(description='Train')
 
-parser.add_argument('-x', '--executions', default=5, type=int, metavar='N', help='Number of executions')
+parser.add_argument('-x', '--executions', default=1, type=int, metavar='N', help='Number of executions')
 parser.add_argument('-w', '--workers', default=4, type=int, metavar='N', help='number of data loading workers')
 parser.add_argument('-bs', '--batch-size', default=64, type=int, metavar='N', help='mini-batch size')
 #parser.add_argument('-e', '--epochs', default=2, type=int, metavar='N', help='number of total epochs to run')
@@ -139,32 +139,32 @@ def main():
                                 embed_size = 300
                                 num_channels = 100
                                 kernel_size = [3,4,5]
-                                output_size = 4
+                                output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
                                 #max_epochs = 15
                                 #lr = 0.3
                                 #batch_size = 64
                                 max_sen_len = 30 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
                                 dropout_keep = 0.8
                             args.text_config = TextCNNConfig()
-                        #elif args.model_name == "textrnn":
-                        #    class TextRNNConfig(object):
-                        #        embed_size = 300
-                        #        hidden_layers = 2
-                        #        hidden_size = 32
-                        #        bidirectional = True
-                        #        output_size = 4
-                        #        #max_epochs = 10
-                        #        #lr = 0.25
-                        #        #batch_size = 64
-                        #        max_sen_len = 20 # Sequence length for RNN
-                        #        dropout_keep = 0.8
-                        #    args.text_config = TextRNNConfig()
+                        elif args.model_name == "textrnn":
+                            class TextRNNConfig(object):
+                                embed_size = 300
+                                hidden_layers = 2
+                                hidden_size = 32
+                                bidirectional = True
+                                output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+                                #max_epochs = 10
+                                #lr = 0.25
+                                #batch_size = 64
+                                max_sen_len = 20 # Sequence length for RNN #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+                                dropout_keep = 0.8
+                            args.text_config = TextRNNConfig()
                         elif args.model_name == "rcnn":
                             class RCNNConfig(object):
                                 embed_size = 300
                                 hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
                                 hidden_size = 64
-                                output_size = 4
+                                output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
                                 #max_epochs = 15
                                 hidden_size_linear = 64
                                 #lr = 0.5
@@ -182,7 +182,7 @@ def main():
                                 hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
                                 hidden_size = 32
                                 bidirectional = True
-                                output_size = 4
+                                output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
                                 #max_epochs = 15
                                 #lr = 0.5
                                 #batch_size = 128
@@ -215,6 +215,9 @@ def main():
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
                     args.data_type = "image"
                 elif args.dataset == "agnews":
+                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
+                    args.data_type = "text"
+                elif args.dataset == "yelprf":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
                     args.data_type = "text"
 

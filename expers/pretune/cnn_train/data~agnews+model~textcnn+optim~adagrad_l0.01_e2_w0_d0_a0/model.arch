@@ -1,5 +1,5 @@
 TextCNN(
-  (embeddings): Embedding(70308, 300)
+  (embeddings): Embedding(101166, 300)
   (conv1): Sequential(
     (0): Conv1d(300, 100, kernel_size=(3,), stride=(1,))
     (1): ReLU()
