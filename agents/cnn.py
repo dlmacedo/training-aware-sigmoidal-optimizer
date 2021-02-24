@@ -56,6 +56,7 @@ class CNNAgent:
             self.trainset_second_partition_loader_for_infer,
             self.valset_loader, self.normalize) = text_loaders.get_loaders()
 
+            
         if self.args.partition == "1":
             self.trainset_loader_for_train = self.trainset_first_partition_loader_for_train
         elif self.args.partition == "2":
@@ -106,19 +107,19 @@ class CNNAgent:
         ##############################################################
         elif self.args.model_name == "textcnn":
             self.model = models.TextCNN(
-                self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+                len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings, self.args.number_of_model_classes)
         elif self.args.model_name == "rcnn":
             self.model = models.RCNN(
                 self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
         elif self.args.model_name == "s2satt":
             self.model = models.Seq2SeqAttention(
                 self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
-        elif self.args.model_name == "fasttext":
-            embed_dim = 64
-            self.model = models.FastText(
-                #self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
-                #len(train_dataset.get_vocab()), embed_dim, len(train_dataset.get_labels()))
-                len(text_loaders.train_set.get_vocab()), embed_dim, len(text_loaders.train_set.get_labels()))
+        #elif self.args.model_name == "fasttext":
+        #    embed_dim = 64
+        #    self.model = models.FastText(
+        #        #self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+        #        #len(train_dataset.get_vocab()), embed_dim, len(train_dataset.get_labels()))
+        #        len(text_loaders.train_set.get_vocab()), embed_dim, len(text_loaders.train_set.get_labels()))
         self.model.cuda()
         torch.manual_seed(self.args.base_seed)
         torch.cuda.manual_seed(self.args.base_seed)
@@ -416,6 +417,15 @@ class CNNAgent:
                 inputs = batch_data[0]
                 targets = batch_data[1]
             elif self.args.data_type == "text":
+                """
+                inputs = batch_data[0]
+                #print(inputs.size())
+                #print(inputs)
+                targets = (batch_data[1] - 1).type(torch.LongTensor)
+                #print(targets.size())
+                #print(targets)
+                """
+                """
                 if self.args.dataset_full in ['yelprf']:
                     inputs = batch_data[0]
                     #print(inputs.size())
@@ -429,6 +439,9 @@ class CNNAgent:
                 else:
                     inputs = batch_data.text
                     targets = (batch_data.label - 1).type(torch.LongTensor)
+                """
+                inputs = batch_data.text
+                targets = (batch_data.label - 1).type(torch.LongTensor)
 
 
             # moving to GPU...
@@ -502,6 +515,7 @@ class CNNAgent:
                     inputs = batch_data[0]
                     targets = batch_data[1]
                 elif self.args.data_type == "text":
+                    """
                     if self.args.dataset_full in ['yelprf']:
                         inputs = batch_data[0]
                         #print(inputs.size())
@@ -515,6 +529,9 @@ class CNNAgent:
                     else:
                         inputs = batch_data.text
                         targets = (batch_data.label - 1).type(torch.LongTensor)
+                    """
+                    inputs = batch_data.text
+                    targets = (batch_data.label - 1).type(torch.LongTensor)
 
                 # moving to GPU...
                 inputs = inputs.cuda()

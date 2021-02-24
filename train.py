@@ -135,17 +135,20 @@ def main():
                         args.model_name = str(config[1])
                         print("MODEL:", args.model_name.upper())
                         if args.model_name == "textcnn":
+                            args.max_sen_len = 30
+                            """
                             class TextCNNConfig(object):
                                 embed_size = 300
                                 num_channels = 100
                                 kernel_size = [3,4,5]
+                                dropout_keep = 0.8
                                 output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
                                 #max_epochs = 15
                                 #lr = 0.3
                                 #batch_size = 64
                                 max_sen_len = 30 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
-                                dropout_keep = 0.8
                             args.text_config = TextCNNConfig()
+                            """
                         elif args.model_name == "textrnn":
                             class TextRNNConfig(object):
                                 embed_size = 300
@@ -165,8 +168,9 @@ def main():
                                 hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
                                 hidden_size = 64
                                 output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
-                                #max_epochs = 15
                                 hidden_size_linear = 64
+                                dropout_keep = 0.8                                
+                                #max_epochs = 15
                                 #lr = 0.5
                                 #batch_size = 128
                                 ######################
@@ -174,7 +178,6 @@ def main():
                                 ######################
                                 max_sen_len = None
                                 ######################
-                                dropout_keep = 0.8                                
                             args.text_config = RCNNConfig()
                         elif args.model_name == "s2satt":
                             class S2SAttConfig(object):
@@ -183,10 +186,10 @@ def main():
                                 hidden_size = 32
                                 bidirectional = True
                                 output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+                                dropout_keep = 0.8
                                 #max_epochs = 15
                                 #lr = 0.5
                                 #batch_size = 128
-                                dropout_keep = 0.8
                                 max_sen_len = None # Sequence length for RNN
                             args.text_config = S2SAttConfig()
                     elif config[0] == "optim":
@@ -215,10 +218,10 @@ def main():
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
                     args.data_type = "image"
                 elif args.dataset == "agnews":
-                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
+                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 4
                     args.data_type = "text"
                 elif args.dataset == "yelprf":
-                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
+                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 5
                     args.data_type = "text"
 
                 #args.experiment_alternative_path = os.path.join("pretrained", args.exp_input, args.loss)

@@ -6,37 +6,57 @@ from torch import nn
 import numpy as np
 #from utils import *
 
-class TextCNN(nn.Module):
-    def __init__(self, config, vocab_size, word_embeddings):
+class TextCNN(nn.Module):  
+    #def __init__(self, config, vocab_size, word_embeddings):
+    def __init__(self, vocab_size, word_embeddings, num_class):
+    
         super(TextCNN, self).__init__()
-        self.config = config
+        #self.config = config
+
+        self.num_channels = 100
+        self.kernel_size = [3,4,5]
+        self.dropout_keep = 0.8
+        self.max_sen_len = 30
+        #self.output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+        self.embed_size = 300
+        self.output_size = num_class #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
         
         # Embedding Layer
-        self.embeddings = nn.Embedding(vocab_size, self.config.embed_size)
-        self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=False)
+        #self.embeddings = nn.Embedding(vocab_size, self.config.embed_size)
+        self.embeddings = nn.Embedding(vocab_size, self.embed_size)
+        #self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=False)
+        self.embeddings.weight.data.uniform_(-0.5, 0.5)
         
         # This stackoverflow thread clarifies how conv1d works
         # https://stackoverflow.com/questions/46503816/keras-conv1d-layer-parameters-filters-and-kernel-size/46504997
         self.conv1 = nn.Sequential(
-            nn.Conv1d(in_channels=self.config.embed_size, out_channels=self.config.num_channels, kernel_size=self.config.kernel_size[0]),
+            #nn.Conv1d(in_channels=self.config.embed_size, out_channels=self.config.num_channels, kernel_size=self.config.kernel_size[0]),
+            nn.Conv1d(in_channels=self.embed_size, out_channels=self.num_channels, kernel_size=self.kernel_size[0]),
             nn.ReLU(),
-            nn.MaxPool1d(self.config.max_sen_len - self.config.kernel_size[0]+1)
+            #nn.MaxPool1d(self.config.max_sen_len - self.config.kernel_size[0]+1)
+            nn.MaxPool1d(self.max_sen_len - self.kernel_size[0]+1)
         )
         self.conv2 = nn.Sequential(
-            nn.Conv1d(in_channels=self.config.embed_size, out_channels=self.config.num_channels, kernel_size=self.config.kernel_size[1]),
+            #nn.Conv1d(in_channels=self.config.embed_size, out_channels=self.config.num_channels, kernel_size=self.config.kernel_size[1]),
+            nn.Conv1d(in_channels=self.embed_size, out_channels=self.num_channels, kernel_size=self.kernel_size[1]),
             nn.ReLU(),
-            nn.MaxPool1d(self.config.max_sen_len - self.config.kernel_size[1]+1)
+            #nn.MaxPool1d(self.config.max_sen_len - self.config.kernel_size[1]+1)
+            nn.MaxPool1d(self.max_sen_len - self.kernel_size[1]+1)
         )
         self.conv3 = nn.Sequential(
-            nn.Conv1d(in_channels=self.config.embed_size, out_channels=self.config.num_channels, kernel_size=self.config.kernel_size[2]),
+            #nn.Conv1d(in_channels=self.config.embed_size, out_channels=self.config.num_channels, kernel_size=self.config.kernel_size[2]),
+            nn.Conv1d(in_channels=self.embed_size, out_channels=self.num_channels, kernel_size=self.kernel_size[2]),
             nn.ReLU(),
-            nn.MaxPool1d(self.config.max_sen_len - self.config.kernel_size[2]+1)
+            #nn.MaxPool1d(self.config.max_sen_len - self.config.kernel_size[2]+1)
+            nn.MaxPool1d(self.max_sen_len - self.kernel_size[2]+1)
         )
         
-        self.dropout = nn.Dropout(self.config.dropout_keep)
+        #self.dropout = nn.Dropout(self.config.dropout_keep)
+        self.dropout = nn.Dropout(self.dropout_keep)
         
         # Fully-Connected Layer
-        self.fc = nn.Linear(self.config.num_channels*len(self.config.kernel_size), self.config.output_size)
+        #self.fc = nn.Linear(self.config.num_channels*len(self.config.kernel_size), self.config.output_size)
+        self.fc = nn.Linear(self.num_channels*len(self.kernel_size), self.output_size)
         
         # Softmax non-linearity
         #self.softmax = nn.Softmax()

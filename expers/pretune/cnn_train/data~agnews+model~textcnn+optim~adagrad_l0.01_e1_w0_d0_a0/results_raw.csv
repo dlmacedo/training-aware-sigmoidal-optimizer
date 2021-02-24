@@ -1,1 +1,6 @@
 DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
+agnews,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,TRAIN,LOSS,0.5840934293667476
+agnews,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,TRAIN,ACC1,78.74916666666667
+agnews,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,HYPER,LR,0.01
+agnews,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,VALID,LOSS,0.33751054327277574
+agnews,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,VALID,ACC1,89.15789473684211

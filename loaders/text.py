@@ -22,7 +22,7 @@ import spacy
 class Dataset(object):
     def __init__(self, args):
         self.args = args
-        self.config = self.args.text_config
+        #self.config = self.args.text_config
         self.train_iterator = None
         self.test_iterator = None
         self.val_iterator = None
@@ -39,15 +39,20 @@ class Dataset(object):
         '''
         return int(label.strip()[-1])
 
-    def get_pandas_df(self, filename):
+    def get_pandas_df(self, filename, original):
         '''
         Load the data into Pandas.DataFrame object
         This will be used to convert data to torchtext object
         '''
         with open(filename, 'r') as datafile:     
             data = [line.strip().split(',', maxsplit=1) for line in datafile]
-            data_text = list(map(lambda x: x[1], data))
-            data_label = list(map(lambda x: self.parse_label(x[0]), data))
+
+            if original:
+                data_text = list(map(lambda x: x[1], data))
+                data_label = list(map(lambda x: self.parse_label(x[0]), data))
+            else:
+                data_text = list(map(lambda x: x[1][1:-1], data))
+                data_label = list(map(lambda x: int(x[0][1:-1]), data))
 
         full_df = pd.DataFrame({"text":data_text, "label":data_label})
         return full_df
@@ -77,7 +82,8 @@ class Dataset(object):
         #LABEL = data.Field(sequential=False, use_vocab=False)
         ##TEXT = data.Field(sequential=True, tokenize='spacy', lower=True, fix_length=self.config.max_sen_len)
         TEXT = data.Field(
-            sequential=True, tokenize=tokenizer, lower=True, fix_length=self.config.max_sen_len,
+            #sequential=True, tokenize=tokenizer, lower=True, fix_length=self.config.max_sen_len,
+            sequential=True, tokenize=tokenizer, lower=True, fix_length=self.args.max_sen_len,
             include_lengths=False, batch_first=False)
         LABEL = data.Field(sequential=False)
 
@@ -85,11 +91,15 @@ class Dataset(object):
         #"""
         datafields = [("text",TEXT),("label",LABEL)]
         # Load data from pd.DataFrame into torchtext.data.Dataset
-        train_df = self.get_pandas_df(train_file)
+        #train_df = self.get_pandas_df(train_file, True)
+        train_df = self.get_pandas_df(train_file, False)
+        print(train_df)
         train_examples = [data.Example.fromlist(i, datafields) for i in train_df.values.tolist()]
         train_data = data.Dataset(train_examples, datafields)
         
-        test_df = self.get_pandas_df(test_file)
+        #test_df = self.get_pandas_df(test_file, True)
+        test_df = self.get_pandas_df(test_file, False)
+        print(test_df)
         test_examples = [data.Example.fromlist(i, datafields) for i in test_df.values.tolist()]
         test_data = data.Dataset(test_examples, datafields)
         #"""
@@ -127,7 +137,7 @@ class Dataset(object):
             batch_size=self.args.batch_size,
             sort_key=lambda x: len(x.text),
             repeat=False,
-            shuffle=True)
+            shuffle=False)
         
         """
         self.val_iterator, self.test_iterator = data.BucketIterator.splits(
@@ -188,10 +198,10 @@ class TextLoader:
             train_file = 'data/agnews/ag_news.train'
             test_file = 'data/agnews/ag_news.test'  
             w2v_file = 'data/agnews/glove.840B.300d.txt'
-            self.args.text_dataset = Dataset(self.args)
-            self.args.text_dataset.load_data(w2v_file, train_file, test_file)
-            #text_dataset precisa estar no nivel args???
-            #text_dataset precisa estar no nivel args???
+            #self.args.text_dataset = Dataset(self.args)
+            #self.args.text_dataset.load_data(w2v_file, train_file, test_file)
+            ##text_dataset precisa estar no nivel args???
+            ##text_dataset precisa estar no nivel args???
 
             """
             self.normalize = transforms.Normalize((0.491, 0.482, 0.446), (0.247, 0.243, 0.261))
@@ -214,30 +224,51 @@ class TextLoader:
                 root=self.dataset_path, train=False, download=True, transform=self.inference_transform)
             """
 
-        if self.args.dataset == "yelprf":
+        elif self.args.dataset == "yelprf":
+            train_file = '.data/yelp_review_full_csv/train.csv'
+            test_file = '.data/yelp_review_full_csv/test.csv'  
+            w2v_file = 'data/agnews/glove.840B.300d.txt'
+            #self.args.text_dataset = Dataset(self.args)
+            #self.args.text_dataset.load_data(w2v_file, train_file, test_file)
+            ##text_dataset precisa estar no nivel args???
+            ##text_dataset precisa estar no nivel args???
+            """
             self.train_set, self.test_set = datasets.YelpReviewFull()
             # split train_dataset into train and valid
             #train_len = int(len(self.train_set) * 0.95)
             #self.train_set_less_valid, self.valid_set = random_split(self.train_set, [train_len, len(self.train_set) - train_len])
+            """
+
+        self.args.text_dataset = Dataset(self.args)
+        self.args.text_dataset.load_data(w2v_file, train_file, test_file)
     
 
 
     def get_loaders(self):
 
-        if self.args.dataset == "yelprf":
-            self.train_loader = DataLoader(
-                self.train_set, batch_size=self.args.batch_size, shuffle=True,
-                collate_fn=self.generate_batch, num_workers=self.args.workers, worker_init_fn=self._worker_init)
-            self.test_loader = DataLoader(
-                self.test_set, batch_size=self.args.batch_size,
-                collate_fn=self.generate_batch, worker_init_fn=self._worker_init)
-            return self.train_loader, None, None, None, self.test_loader, None
+        #if self.args.dataset in ["old"]:
+        #    #"""
+        #    self.train_loader = DataLoader(
+        #        self.train_set, batch_size=self.args.batch_size, shuffle=True,
+        #        collate_fn=self.generate_batch, num_workers=self.args.workers, worker_init_fn=self._worker_init)
+        #    self.test_loader = DataLoader(
+        #        self.test_set, batch_size=self.args.batch_size,
+        #        collate_fn=self.generate_batch, worker_init_fn=self._worker_init)
+        #    #"""
+        #
+        #    """
+        #    self.train_loader = data.BucketIterator(
+        #        (self.train_set), batch_size=self.args.batch_size, sort_key=lambda x: len(x.text), repeat=False, shuffle=True,)
+        #        #sort=False, sort_within_batch=True) # repeat???
+        #    
+        #    self.test_loader = data.BucketIterator(
+        #        (self.test_set), batch_size=self.args.batch_size, sort_key=lambda x: len(x.text), repeat=False, shuffle=False,)
+        #        #sort=False, sort_within_batch=True) # repeat???
+        #    """
+        #
+        #    return self.train_loader, None, None, None, self.test_loader, None
 
-
-        return (self.args.text_dataset.train_iterator, None,
-                #self.args.text_dataset.train_iterator, None,
-                None, None,
-                self.args.text_dataset.test_iterator, None)
+        return self.args.text_dataset.train_iterator, None, None, None, self.args.text_dataset.test_iterator, None
 
 
     def _worker_init(self, worker_id):
@@ -263,11 +294,27 @@ class TextLoader:
                 index of the individual sequence in the text tensor.
             cls: a tensor saving the labels of individual text entries.
         """
+        """
         label = torch.tensor([entry[0] for entry in batch])
         text = [entry[1] for entry in batch]
-        #print(len(text))
-        #print(text[0])
         offsets = [0] + [len(entry) for entry in text]
         offsets = torch.tensor(offsets[:-1]).cumsum(dim=0)
         text = torch.cat(text)
         return text, offsets, label
+        """
+        label = torch.tensor([entry[0] for entry in batch])
+        #text = [entry[1] for entry in batch]
+        max_len = max([len(entry[1]) for entry in batch])
+        text = [torch.tensor(entry[1].tolist() + [0] * (max_len - len(entry[1]))) for entry in batch]
+        #print("$$$$$$$$$$$$$$$$$$$$$$$ BEGIN")
+        #print(len(text))
+        #print(len(text[0]))
+        #print(len(text[1]))
+        #print(len(text[2]))
+        text = torch.stack(text, 0).permute(1,0)
+        #print(text.size())
+        #print(text)
+        #print(label.size())
+        #print(label)
+        #print("$$$$$$$$$$$$$$$$$$$$$$$ END")
+        return text, label
