@@ -309,9 +309,10 @@ def main():
             dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].mean()
             dfx = dfx.rename(columns={'TRAIN LOSS': 'TRAIN LOSS MEAN', 'TRAIN ACC1': 'TRAIN ACC1 MEAN',
                 'VALID LOSS': 'VALID LOSS MEAN', 'VALID ACC1': 'VALID ACC1 MEAN'})
+            #dfx = dfx.sort_values('OPTIM', ascending=True)#.drop_duplicates(["LOSS"])
+            #print(dfx.to_string())
             dfx = dfx.sort_values('VALID ACC1 MEAN', ascending=False)#.drop_duplicates(["LOSS"])
-            print(dfx)
-            print()
+            print(dfx.to_string())
             #dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg([np.mean, np.std, np.count])
             dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg(['mean', 'std', 'count'])
             print(dfx)

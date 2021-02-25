@@ -1,0 +1,6 @@
+DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
+amazonrf,s2satt,adagrad_l0.01_e1_w0_d0_a0,1,1,TRAIN,LOSS,1.081192448191448
+amazonrf,s2satt,adagrad_l0.01_e1_w0_d0_a0,1,1,TRAIN,ACC1,53.180366666666664
+amazonrf,s2satt,adagrad_l0.01_e1_w0_d0_a0,1,1,HYPER,LR,0.01
+amazonrf,s2satt,adagrad_l0.01_e1_w0_d0_a0,1,1,VALID,LOSS,1.0367493532531418
+amazonrf,s2satt,adagrad_l0.01_e1_w0_d0_a0,1,1,VALID,ACC1,54.982769230769236

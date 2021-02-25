@@ -374,7 +374,9 @@ class CNNAgent:
                 print("!+NEW BEST MODEL VALID ACC1:\t\t{0:.4f} IN EPOCH {1}! SAVING {2}\n".format(
                     valid_acc1, self.epoch, self.args.best_model_file_path))
 
-                torch.save(self.model.state_dict(), self.args.best_model_file_path)
+                ####################################################################
+                #torch.save(self.model.state_dict(), self.args.best_model_file_path)
+                ####################################################################
 
             print('!$$$$ BEST MODEL TRAIN ACC1:\t\t{0:.4f}'.format(best_model_results["TRAIN ACC1"]))
             print('!$$$$ BEST MODEL VALID ACC1:\t\t{0:.4f}'.format(best_model_results["VALID ACC1"]))

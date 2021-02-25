@@ -1,0 +1,6 @@
+DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
+amazonrf,rcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,TRAIN,LOSS,1.0427274779892584
+amazonrf,rcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,TRAIN,ACC1,54.91726666666666
+amazonrf,rcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,HYPER,LR,0.01
+amazonrf,rcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,VALID,LOSS,0.9971961252494648
+amazonrf,rcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,VALID,ACC1,56.19046153846155
