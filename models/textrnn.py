@@ -6,27 +6,38 @@ import numpy as np
 #from utils import *
 
 class TextRNN(nn.Module):
-    def __init__(self, config, vocab_size, word_embeddings):
+    #def __init__(self, config, vocab_size, word_embeddings):
+    def __init__(self, vocab_size, word_embeddings, num_class):
         super(TextRNN, self).__init__()
-        self.config = config
+        #self.config = config
+
+        self.embed_size = 300
+        self.hidden_layers = 2
+        self.hidden_size = 32
+        self.bidirectional = True
+        self.output_size = num_class
+        #max_epochs = 10
+        #lr = 0.25
+        #batch_size = 64
+        #max_sen_len = 20 # Sequence length for RNN 
+        self.dropout_keep = 0.8
         
         # Embedding Layer
-        self.embeddings = nn.Embedding(vocab_size, self.config.embed_size)
+        self.embeddings = nn.Embedding(vocab_size, self.embed_size)
         self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=False)
         
-        self.lstm = nn.LSTM(input_size = self.config.embed_size,
-                            hidden_size = self.config.hidden_size,
-                            num_layers = self.config.hidden_layers,
-                            dropout = self.config.dropout_keep,
-                            bidirectional = self.config.bidirectional)
+        self.lstm = nn.LSTM(
+            input_size = self.embed_size,
+            hidden_size = self.hidden_size,
+            num_layers = self.hidden_layers,
+            dropout = self.dropout_keep,
+            bidirectional = self.bidirectional
+            )
         
-        self.dropout = nn.Dropout(self.config.dropout_keep)
+        self.dropout = nn.Dropout(self.dropout_keep)
         
         # Fully-Connected Layer
-        self.fc = nn.Linear(
-            self.config.hidden_size * self.config.hidden_layers * (1+self.config.bidirectional),
-            self.config.output_size
-        )
+        self.fc = nn.Linear(self.hidden_size * self.hidden_layers * (1+self.bidirectional), self.output_size)
         
         # Softmax non-linearity
         #self.softmax = nn.Softmax()

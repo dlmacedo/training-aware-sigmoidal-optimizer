@@ -8,37 +8,44 @@ from torch.nn import functional as F
 #from utils import *
 
 class RCNN(nn.Module):
-    def __init__(self, config, vocab_size, word_embeddings):
+    #def __init__(self, config, vocab_size, word_embeddings):
+    def __init__(self, vocab_size, word_embeddings, num_class):
         super(RCNN, self).__init__()
-        self.config = config
+        #self.config = config
         
+        self.embed_size = 300
+        self.hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+        self.hidden_size = 64
+        self.output_size = num_class
+        self.hidden_size_linear = 64
+        self.dropout_keep = 0.8                                
+        #max_epochs = 15
+        #lr = 0.5
+        #batch_size = 128
+
         # Embedding Layer
-        self.embeddings = nn.Embedding(vocab_size, self.config.embed_size)
+        self.embeddings = nn.Embedding(vocab_size, self.embed_size)
         self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=False)
         
         # Bi-directional LSTM for RCNN
-        self.lstm = nn.LSTM(input_size = self.config.embed_size,
-                            hidden_size = self.config.hidden_size,
-                            num_layers = self.config.hidden_layers,
-                            dropout = self.config.dropout_keep,
-                            bidirectional = True)
+        self.lstm = nn.LSTM(
+            input_size = self.embed_size,
+            hidden_size = self.hidden_size,
+            num_layers = self.hidden_layers,
+            dropout = self.dropout_keep,
+            bidirectional = True
+            )
         
-        self.dropout = nn.Dropout(self.config.dropout_keep)
+        self.dropout = nn.Dropout(self.dropout_keep)
         
         # Linear layer to get "convolution output" to be passed to Pooling Layer
-        self.W = nn.Linear(
-            self.config.embed_size + 2*self.config.hidden_size,
-            self.config.hidden_size_linear
-        )
+        self.W = nn.Linear(self.embed_size + 2*self.hidden_size, self.hidden_size_linear)
         
         # Tanh non-linearity
         self.tanh = nn.Tanh()
         
         # Fully-Connected Layer
-        self.fc = nn.Linear(
-            self.config.hidden_size_linear,
-            self.config.output_size
-        )
+        self.fc = nn.Linear(self.hidden_size_linear, self.output_size)
         
         # Softmax non-linearity
         #self.softmax = nn.Softmax()
@@ -54,9 +61,7 @@ class RCNN(nn.Module):
         input_features = torch.cat([lstm_out,embedded_sent], 2).permute(1,0,2)
         # final_features.shape = (batch_size, seq_len, embed_size + 2*hidden_size)
         
-        linear_output = self.tanh(
-            self.W(input_features)
-        )
+        linear_output = self.tanh(self.W(input_features))
         # linear_output.shape = (batch_size, seq_len, hidden_size_linear)
         
         linear_output = linear_output.permute(0,2,1) # Reshaping fot max_pool

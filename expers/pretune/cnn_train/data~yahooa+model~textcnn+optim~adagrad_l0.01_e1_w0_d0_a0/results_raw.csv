@@ -1,0 +1,6 @@
+DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
+yahooa,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,TRAIN,LOSS,1.1768969280542647
+yahooa,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,TRAIN,ACC1,63.33135714285714
+yahooa,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,HYPER,LR,0.01
+yahooa,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,VALID,LOSS,1.039239143638977
+yahooa,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,VALID,ACC1,67.625

@@ -319,7 +319,7 @@ class ImageLoader:
 
         print("\nPreparing samplers...")
 
-        #"""
+        """
         if self.args.number_of_first_partition_examples_per_class != 0:
             for index in tqdm(range(len(self.trainset_for_train))):
                 _, label = self.trainset_for_train[index]
@@ -345,12 +345,12 @@ class ImageLoader:
                     number_of_second_partition_indexes[label] += 1
                 elif self.args.number_of_first_partition_examples_per_class == 0:
                     first_partition_indexes.append(index)
-        #"""
-
         """
+
+        #"""
         first_partition_indexes = list(range(len(self.trainset_for_train)))
         second_partition_indexes = []
-        """
+        #"""
 
         print("\n##################################################")
         print("NUMBER OF FIRST PARTITION EXAMPLES PER CLASS:", number_of_first_partition_indexes)

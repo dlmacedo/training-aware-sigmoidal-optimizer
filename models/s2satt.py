@@ -8,28 +8,39 @@ from torch.nn import functional as F
 #from utils import *
 
 class Seq2SeqAttention(nn.Module):
-    def __init__(self, config, vocab_size, word_embeddings):
+    #def __init__(self, config, vocab_size, word_embeddings):
+    def __init__(self, vocab_size, word_embeddings, num_class):
         super(Seq2SeqAttention, self).__init__()
-        self.config = config
-        
+        #self.config = config
+
+        self.embed_size = 300
+        self.hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+        self.hidden_size = 32
+        self.bidirectional = True
+        self.output_size = num_class
+        self.dropout_keep = 0.8
+        #max_epochs = 15
+        #lr = 0.5
+        #batch_size = 128
+        #max_sen_len = None # Sequence length for RNN
+
         # Embedding Layer
-        self.embeddings = nn.Embedding(vocab_size, self.config.embed_size)
+        self.embeddings = nn.Embedding(vocab_size, self.embed_size)
         self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=False)
         
         # Encoder RNN
-        self.lstm = nn.LSTM(input_size = self.config.embed_size,
-                            hidden_size = self.config.hidden_size,
-                            num_layers = self.config.hidden_layers,
-                            bidirectional = self.config.bidirectional)
+        self.lstm = nn.LSTM(
+            input_size = self.embed_size,
+            hidden_size = self.hidden_size,
+            num_layers = self.hidden_layers,
+            bidirectional = self.bidirectional
+            )
         
         # Dropout Layer
-        self.dropout = nn.Dropout(self.config.dropout_keep)
+        self.dropout = nn.Dropout(self.dropout_keep)
         
         # Fully-Connected Layer
-        self.fc = nn.Linear(
-            self.config.hidden_size * (1+self.config.bidirectional) * 2,
-            self.config.output_size
-        )
+        self.fc = nn.Linear(self.hidden_size * (1+self.bidirectional) * 2, self.output_size)
         
         # Softmax non-linearity
         #self.softmax = nn.Softmax()
@@ -62,10 +73,7 @@ class Seq2SeqAttention(nn.Module):
         
         # Final hidden state of last layer (num_directions, batch_size, hidden_size)
         batch_size = h_n.shape[1]
-        h_n_final_layer = h_n.view(self.config.hidden_layers,
-                                   self.config.bidirectional + 1,
-                                   batch_size,
-                                   self.config.hidden_size)[-1,:,:,:]
+        h_n_final_layer = h_n.view(self.hidden_layers, self.bidirectional + 1, batch_size, self.hidden_size)[-1,:,:,:]
         
         ##################################### Attention #####################################
         # Convert input to (batch_size, num_directions * hidden_size) for attention

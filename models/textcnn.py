@@ -17,15 +17,17 @@ class TextCNN(nn.Module):
         self.kernel_size = [3,4,5]
         self.dropout_keep = 0.8
         self.max_sen_len = 30
-        #self.output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+        #max_epochs = 15
+        #lr = 0.3
+        #batch_size = 64
         self.embed_size = 300
-        self.output_size = num_class #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+        self.output_size = num_class
         
         # Embedding Layer
         #self.embeddings = nn.Embedding(vocab_size, self.config.embed_size)
         self.embeddings = nn.Embedding(vocab_size, self.embed_size)
-        #self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=False)
-        self.embeddings.weight.data.uniform_(-0.5, 0.5)
+        self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=False)
+        #self.embeddings.weight.data.uniform_(-0.5, 0.5)
         
         # This stackoverflow thread clarifies how conv1d works
         # https://stackoverflow.com/questions/46503816/keras-conv1d-layer-parameters-filters-and-kernel-size/46504997

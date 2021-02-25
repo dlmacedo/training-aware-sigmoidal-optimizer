@@ -248,16 +248,10 @@ def ResNet18(num_c):
 
 
 def ResNet34(num_c):
-    print("DDDDDDDDDDDDDDDDDDDD")
-    print("DDDDDDDDDDDDDDDDDDDD")
-    print("DDDDDDDDDDDDDDDDDDDD")
     return ResNet(BasicBlock, [3, 4, 6, 3], num_classes=num_c)
 
 
 def ResNet50(num_c):
-    print("DDDDDDDDDDDDDDDDDDDD")
-    print("DDDDDDDDDDDDDDDDDDDD")
-    print("DDDDDDDDDDDDDDDDDDDD")
     return ResNet(Bottleneck, [3, 4, 6, 3], num_classes=num_c)
 
 

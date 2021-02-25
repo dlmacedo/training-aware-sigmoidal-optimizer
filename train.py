@@ -136,6 +136,7 @@ def main():
                         print("MODEL:", args.model_name.upper())
                         if args.model_name == "textcnn":
                             args.max_sen_len = 30
+                            #args.max_sen_len = None
                             """
                             class TextCNNConfig(object):
                                 embed_size = 300
@@ -150,6 +151,8 @@ def main():
                             args.text_config = TextCNNConfig()
                             """
                         elif args.model_name == "textrnn":
+                            args.max_sen_len = None
+                            """
                             class TextRNNConfig(object):
                                 embed_size = 300
                                 hidden_layers = 2
@@ -162,7 +165,10 @@ def main():
                                 max_sen_len = 20 # Sequence length for RNN #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
                                 dropout_keep = 0.8
                             args.text_config = TextRNNConfig()
+                            """
                         elif args.model_name == "rcnn":
+                            args.max_sen_len = None
+                            """
                             class RCNNConfig(object):
                                 embed_size = 300
                                 hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
@@ -179,7 +185,10 @@ def main():
                                 max_sen_len = None
                                 ######################
                             args.text_config = RCNNConfig()
+                            """
                         elif args.model_name == "s2satt":
+                            args.max_sen_len = None
+                            """
                             class S2SAttConfig(object):
                                 embed_size = 300
                                 hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
@@ -192,6 +201,7 @@ def main():
                                 #batch_size = 128
                                 max_sen_len = None # Sequence length for RNN
                             args.text_config = S2SAttConfig()
+                            """
                     elif config[0] == "optim":
                         args.optim = str(config[1])
                         print("OPTIM:", args.optim.upper())
@@ -221,6 +231,12 @@ def main():
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 4
                     args.data_type = "text"
                 elif args.dataset == "yelprf":
+                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 5
+                    args.data_type = "text"
+                elif args.dataset == "yahooa":
+                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 10
+                    args.data_type = "text"
+                elif args.dataset == "amazonrf":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 5
                     args.data_type = "text"
 

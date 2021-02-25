@@ -57,7 +57,8 @@ class Dataset(object):
         full_df = pd.DataFrame({"text":data_text, "label":data_label})
         return full_df
     
-    def load_data(self, w2v_file, train_file, test_file, val_file=None):
+    #def load_data(self, w2v_file, train_file, test_file, val_file=None):
+    def load_data(self, train_file, test_file):
         '''
         Loads the data from files
         Sets up iterators for training, validation and test data
@@ -83,8 +84,7 @@ class Dataset(object):
         ##TEXT = data.Field(sequential=True, tokenize='spacy', lower=True, fix_length=self.config.max_sen_len)
         TEXT = data.Field(
             #sequential=True, tokenize=tokenizer, lower=True, fix_length=self.config.max_sen_len,
-            sequential=True, tokenize=tokenizer, lower=True, fix_length=self.args.max_sen_len,
-            include_lengths=False, batch_first=False)
+            sequential=True, tokenize=tokenizer, lower=True, fix_length=self.args.max_sen_len, include_lengths=False, batch_first=False)
         LABEL = data.Field(sequential=False)
 
         ##################################################################################################
@@ -96,6 +96,7 @@ class Dataset(object):
         print(train_df)
         train_examples = [data.Example.fromlist(i, datafields) for i in train_df.values.tolist()]
         train_data = data.Dataset(train_examples, datafields)
+        ####train_data, _ = random_split(train_data, [1000, len(train_data) - 1000])
         
         #test_df = self.get_pandas_df(test_file, True)
         test_df = self.get_pandas_df(test_file, False)
@@ -132,141 +133,47 @@ class Dataset(object):
 
         ##################################################################################################
         self.train_iterator = data.BucketIterator(
-            (train_data),
-            #batch_size=self.config.batch_size,
-            batch_size=self.args.batch_size,
-            sort_key=lambda x: len(x.text),
-            repeat=False,
-            shuffle=False)
+            (train_data), batch_size=self.args.batch_size, sort_key=lambda x: len(x.text), train=True, repeat=False, sort=True, shuffle=False)
         
-        """
-        self.val_iterator, self.test_iterator = data.BucketIterator.splits(
-            (val_data, test_data),
-            #batch_size=self.config.batch_size,
-            batch_size=self.args.batch_size,
-            sort_key=lambda x: len(x.text),
-            repeat=False,
-            shuffle=False)
-        """
-
         self.test_iterator = data.BucketIterator(
-            (test_data),
-            #batch_size=self.config.batch_size,
-            batch_size=self.args.batch_size,
-            sort_key=lambda x: len(x.text),
-            repeat=False,
-            shuffle=False)
+            (test_data), batch_size=self.args.batch_size, sort_key=lambda x: len(x.text), train=False, repeat=False, sort=True, shuffle=False)
         ##################################################################################################
-
-        # make iterator for splits
-        #self.train_iterator, self.test_iterator = data.BucketIterator.splits(
-        #    (train_data, test_data),
-        #    batch_size=self.args.batch_size,
-        #    sort_key=lambda x: len(x.text),
-        #    repeat=False,
-        #    shuffle=False)
-        #    #device=0)
 
         print ("Loaded {} training examples".format(len(train_data)))
         print ("Loaded {} test examples".format(len(test_data)))
         #print ("Loaded {} validation examples".format(len(val_data)))
 
 
-"""
-def evaluate_model(model, iterator):
-    all_preds = []
-    all_y = []
-    for idx,batch in enumerate(iterator):
-        if torch.cuda.is_available():
-            x = batch.text.cuda()
-        else:
-            x = batch.text
-        y_pred = model(x)
-        predicted = torch.max(y_pred.cpu().data, 1)[1] + 1
-        all_preds.extend(predicted.numpy())
-        all_y.extend(batch.label.numpy())
-    score = accuracy_score(all_y, np.array(all_preds).flatten())
-    return score
-"""
-
 class TextLoader:
     def __init__(self, args):
 
         self.args = args
 
-        if self.args.dataset == "agnews":
-            train_file = 'data/agnews/ag_news.train'
-            test_file = 'data/agnews/ag_news.test'  
-            w2v_file = 'data/agnews/glove.840B.300d.txt'
-            #self.args.text_dataset = Dataset(self.args)
-            #self.args.text_dataset.load_data(w2v_file, train_file, test_file)
-            ##text_dataset precisa estar no nivel args???
-            ##text_dataset precisa estar no nivel args???
+        #if self.args.dataset == "agnews":
+        #    train_file = 'data/agnews/ag_news.train'
+        #    test_file = 'data/agnews/ag_news.test'  
 
-            """
-            self.normalize = transforms.Normalize((0.491, 0.482, 0.446), (0.247, 0.243, 0.261))
-            self.train_transform = transforms.Compose([
-                transforms.RandomCrop(32, padding=4),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-                self.normalize,
-            ])
-            self.inference_transform = transforms.Compose([
-                transforms.ToTensor(),
-                self.normalize,
-            ])
-            self.dataset_path = "data/cifar10"
-            self.trainset_for_train = torchvision.datasets.CIFAR10(
-                root=self.dataset_path, train=True, download=True, transform=self.train_transform)
-            self.trainset_for_infer = torchvision.datasets.CIFAR10(
-                root=self.dataset_path, train=True, download=True, transform=self.inference_transform)
-            self.val_set = torchvision.datasets.CIFAR10(
-                root=self.dataset_path, train=False, download=True, transform=self.inference_transform)
-            """
+        if self.args.dataset == "yelprf":
+            train_file = 'data/yelp_review_full_csv/train.csv'
+            test_file = 'data/yelp_review_full_csv/test.csv'  
 
-        elif self.args.dataset == "yelprf":
-            train_file = '.data/yelp_review_full_csv/train.csv'
-            test_file = '.data/yelp_review_full_csv/test.csv'  
-            w2v_file = 'data/agnews/glove.840B.300d.txt'
-            #self.args.text_dataset = Dataset(self.args)
-            #self.args.text_dataset.load_data(w2v_file, train_file, test_file)
-            ##text_dataset precisa estar no nivel args???
-            ##text_dataset precisa estar no nivel args???
-            """
-            self.train_set, self.test_set = datasets.YelpReviewFull()
-            # split train_dataset into train and valid
-            #train_len = int(len(self.train_set) * 0.95)
-            #self.train_set_less_valid, self.valid_set = random_split(self.train_set, [train_len, len(self.train_set) - train_len])
-            """
+        elif self.args.dataset == "yahooa":
+            #self.train_set, self.test_set = datasets.YahooAnswers()
+            train_file = 'data/yahoo_answers_csv/train.csv'
+            test_file = 'data/yahoo_answers_csv/test.csv'
+
+        elif self.args.dataset == "amazonrf":
+            #self.train_set, self.test_set = datasets.YelpReviewFull()
+            train_file = 'data/amazon_review_full_csv/train.csv'
+            test_file = 'data/amazon_review_full_csv/test.csv'  
 
         self.args.text_dataset = Dataset(self.args)
-        self.args.text_dataset.load_data(w2v_file, train_file, test_file)
+        #self.args.text_dataset.load_data(w2v_file, train_file, test_file)
+        self.args.text_dataset.load_data(train_file, test_file)
     
 
 
     def get_loaders(self):
-
-        #if self.args.dataset in ["old"]:
-        #    #"""
-        #    self.train_loader = DataLoader(
-        #        self.train_set, batch_size=self.args.batch_size, shuffle=True,
-        #        collate_fn=self.generate_batch, num_workers=self.args.workers, worker_init_fn=self._worker_init)
-        #    self.test_loader = DataLoader(
-        #        self.test_set, batch_size=self.args.batch_size,
-        #        collate_fn=self.generate_batch, worker_init_fn=self._worker_init)
-        #    #"""
-        #
-        #    """
-        #    self.train_loader = data.BucketIterator(
-        #        (self.train_set), batch_size=self.args.batch_size, sort_key=lambda x: len(x.text), repeat=False, shuffle=True,)
-        #        #sort=False, sort_within_batch=True) # repeat???
-        #    
-        #    self.test_loader = data.BucketIterator(
-        #        (self.test_set), batch_size=self.args.batch_size, sort_key=lambda x: len(x.text), repeat=False, shuffle=False,)
-        #        #sort=False, sort_within_batch=True) # repeat???
-        #    """
-        #
-        #    return self.train_loader, None, None, None, self.test_loader, None
 
         return self.args.text_dataset.train_iterator, None, None, None, self.args.text_dataset.test_iterator, None
 
@@ -306,15 +213,51 @@ class TextLoader:
         #text = [entry[1] for entry in batch]
         max_len = max([len(entry[1]) for entry in batch])
         text = [torch.tensor(entry[1].tolist() + [0] * (max_len - len(entry[1]))) for entry in batch]
-        #print("$$$$$$$$$$$$$$$$$$$$$$$ BEGIN")
-        #print(len(text))
-        #print(len(text[0]))
-        #print(len(text[1]))
-        #print(len(text[2]))
         text = torch.stack(text, 0).permute(1,0)
-        #print(text.size())
-        #print(text)
-        #print(label.size())
-        #print(label)
-        #print("$$$$$$$$$$$$$$$$$$$$$$$ END")
         return text, label
+
+
+"""
+from torchtext.experimental.datasets import AG_NEWS
+train, test = AG_NEWS(ngrams=3)
+"""
+
+"""
+from torch.utils.data import DataLoader
+def collate_fn(batch):
+    texts, labels = [], []
+    for label, txt in batch:
+        texts.append(txt)
+        labels.append(label)
+    return texts, labels
+dataloader = DataLoader(train, batch_size=8, collate_fn=collate_fn)
+for idx, (texts, labels) in enumerate(dataloader):
+    print(idx, texts, labels)
+"""
+
+"""
+self.train_set, self.test_set = datasets.YelpReviewFull()
+# split train_dataset into train and valid
+#train_len = int(len(self.train_set) * 0.95)
+#self.train_set_less_valid, self.valid_set = random_split(self.train_set, [train_len, len(self.train_set) - train_len])
+"""
+
+"""
+if self.args.dataset in ["old"]:
+    self.train_loader = DataLoader(
+        self.train_set, batch_size=self.args.batch_size, shuffle=True,
+        collate_fn=self.generate_batch, num_workers=self.args.workers, worker_init_fn=self._worker_init)
+    self.test_loader = DataLoader(
+        self.test_set, batch_size=self.args.batch_size,
+        collate_fn=self.generate_batch, worker_init_fn=self._worker_init)
+
+    self.train_loader = data.BucketIterator(
+        (self.train_set), batch_size=self.args.batch_size, sort_key=lambda x: len(x.text), repeat=False, shuffle=True,)
+        #sort=False, sort_within_batch=True) # repeat???
+    
+    self.test_loader = data.BucketIterator(
+        (self.test_set), batch_size=self.args.batch_size, sort_key=lambda x: len(x.text), repeat=False, shuffle=False,)
+        #sort=False, sort_within_batch=True) # repeat???
+
+    return self.train_loader, None, None, None, self.test_loader, None
+"""

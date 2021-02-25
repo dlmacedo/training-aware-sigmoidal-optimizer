@@ -101,19 +101,22 @@ class CNNAgent:
                 num_classes=self.args.number_of_model_classes, width_coefficient=1.0, depth_coefficient=1.0, dropout_rate=0.2)
         #############################################################################################################################
         #############################################################################################################################
-        elif self.args.model_name == "textrnn":
-            self.model = models.TextRNN(
-                self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+        #elif self.args.model_name == "textrnn":
+        #    self.model = models.TextRNN(
+        #        #self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+        #        len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings, self.args.number_of_model_classes)
         ##############################################################
         elif self.args.model_name == "textcnn":
             self.model = models.TextCNN(
                 len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings, self.args.number_of_model_classes)
         elif self.args.model_name == "rcnn":
             self.model = models.RCNN(
-                self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+                #self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+                len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings, self.args.number_of_model_classes)
         elif self.args.model_name == "s2satt":
             self.model = models.Seq2SeqAttention(
-                self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+                #self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
+                len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings, self.args.number_of_model_classes)
         #elif self.args.model_name == "fasttext":
         #    embed_dim = 64
         #    self.model = models.FastText(
@@ -454,10 +457,13 @@ class CNNAgent:
             #print("############\n")
 
             # compute output
+            """
             if self.args.model_name == 'fasttext':
                 outputs = self.model(inputs, offsets)
             else:
                 outputs = self.model(inputs)
+            """
+            outputs = self.model(inputs)
             #print("$$$$$$$$$$$$$")
             #print(outputs.size())
             #print("$$$$$$$$$$$$$")
@@ -538,10 +544,13 @@ class CNNAgent:
                 targets = targets.cuda(non_blocking=True)
 
                 # compute output
+                """
                 if self.args.model_name == 'fasttext':
                     outputs = self.model(inputs, offsets)
                 else:
                     outputs = self.model(inputs)
+                """
+                outputs = self.model(inputs)
 
                 # compute loss
                 loss = self.criterion(outputs, targets)
