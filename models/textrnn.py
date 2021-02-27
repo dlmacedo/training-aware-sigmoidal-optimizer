@@ -25,6 +25,7 @@ class TextRNN(nn.Module):
         # Embedding Layer
         self.embeddings = nn.Embedding(vocab_size, self.embed_size)
         self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=False)
+        #self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=True)
         
         self.lstm = nn.LSTM(
             input_size = self.embed_size,

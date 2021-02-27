@@ -84,7 +84,8 @@ class Dataset(object):
         ##TEXT = data.Field(sequential=True, tokenize='spacy', lower=True, fix_length=self.config.max_sen_len)
         TEXT = data.Field(
             #sequential=True, tokenize=tokenizer, lower=True, fix_length=self.config.max_sen_len,
-            sequential=True, tokenize=tokenizer, lower=True, fix_length=self.args.max_sen_len, include_lengths=False, batch_first=False)
+            #sequential=True, tokenize=tokenizer, lower=True, fix_length=self.args.max_sen_len, include_lengths=False, batch_first=False)
+            sequential=True, tokenize=tokenizer, lower=True, fix_length=None, include_lengths=False, batch_first=False)
         LABEL = data.Field(sequential=False)
 
         ##################################################################################################
@@ -149,9 +150,11 @@ class TextLoader:
 
         self.args = args
 
-        #if self.args.dataset == "agnews":
+        if self.args.dataset == "agnews":
         #    train_file = 'data/agnews/ag_news.train'
         #    test_file = 'data/agnews/ag_news.test'  
+            train_file = 'data/ag_news_csv/train.csv'
+            test_file = 'data/ag_news_csv/test.csv'  
 
         if self.args.dataset == "yelprf":
             train_file = 'data/yelp_review_full_csv/train.csv'

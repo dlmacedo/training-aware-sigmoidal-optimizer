@@ -14,7 +14,7 @@ class RCNN(nn.Module):
         #self.config = config
         
         self.embed_size = 300
-        self.hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+        self.hidden_layers = 2 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
         self.hidden_size = 64
         self.output_size = num_class
         self.hidden_size_linear = 64
@@ -26,6 +26,8 @@ class RCNN(nn.Module):
         # Embedding Layer
         self.embeddings = nn.Embedding(vocab_size, self.embed_size)
         self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=False)
+        #self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=True)
+        #self.embeddings.weight.data.uniform_(-0.5, 0.5)
         
         # Bi-directional LSTM for RCNN
         self.lstm = nn.LSTM(

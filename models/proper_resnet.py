@@ -90,8 +90,8 @@ class ResNet(nn.Module):
         self.layer2 = self._make_layer(block, 32, num_blocks[1], stride=2)
         self.layer3 = self._make_layer(block, 64, num_blocks[2], stride=2)
         ################
-        #self.linear = nn.Linear(64, num_classes)
-        self.classifier = losses.GenericLossFirstPart(64 * block.expansion, num_classes, loss)
+        self.linear = nn.Linear(64, num_classes)
+        #self.classifier = losses.GenericLossFirstPart(64 * block.expansion, num_classes, loss)
         ################
 
         self.apply(_weights_init) #### best option for resnet32!!! We will use also for resnet110!!!      
@@ -133,11 +133,12 @@ class ResNet(nn.Module):
         out = F.avg_pool2d(out, out.size()[3])
         out = out.view(out.size(0), -1)
         ################
-        #out = self.linear(out)
-        out = self.classifier(out)
+        out = self.linear(out)
+        #out = self.classifier(out)
         ################
         return out
 
+    """
     def logits_features(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
         out = self.layer1(out)
@@ -147,6 +148,7 @@ class ResNet(nn.Module):
         features = out.view(out.size(0), -1)
         logits = self.classifier(features)
         return logits, features
+    """
 
 
 def resnet20():

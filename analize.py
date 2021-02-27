@@ -63,21 +63,33 @@ def main():
 
     #############################################################################
     #############################################################################
-    DATASETS = ['cifar10', 'cifar100', 'svhn', 'stl10']
+    DATASETS = [
+        #'svhn',
+        'stl10',
+        'cifar10', 'cifar100', 'tinyimagenet200',
+        'agnews', 'yelprf', 'yahooa',
+        #'amazonrf',
+        ]
     #############################################################################
     #############################################################################
 
+    """
     EXTRA_DATASETS = [
         'svhn_250', 'svhn_500', 'svhn_1000', 'svhn_2000', 'svhn_3000', 'svhn_4000', 'svhn_5000',
         'cifar10_250', 'cifar10_500', 'cifar10_1000', 'cifar10_2000', 'cifar10_3000', 'cifar10_4000', 'cifar10_5000', 
         'cifar100_25', 'cifar100_50', 'cifar100_100', 'cifar100_200', 'cifar100_300', 'cifar100_400', 'cifar100_500',
         'stl10_25', 'stl10_50', 'stl10_100', 'stl10_200', 'stl10_300', 'stl10_400', 'stl10_500',
         ]
+    """
 
     #############################################################################
     #############################################################################
     #MODELS = ['vgg19', 'resnet34', 'resnet50', 'wideresnet3410', 'densenetbc100'] 
-    MODELS = ['vgg19', 'resnet34', 'resnet50', 'densenetbc100'] 
+    MODELS = [
+        'resnet34',
+        'resnet50', 'densenetbc100', 'efficientnetb0',
+        'rcnn', 'textrnn', 's2satt',
+        ] 
     #############################################################################
     #############################################################################
 
@@ -112,6 +124,7 @@ def main():
     ##print(SVHN_LOSSES_TEXTS)
     #print(OPTIM)
 
+    r"""
     ############################################################################
     ############################################################################
     #sns.set_context("paper", font_scale=1.6)
@@ -221,7 +234,7 @@ def main():
     plt.close()
     ############################################################################
     ############################################################################
-
+    """
 
 
     #######################
@@ -287,14 +300,14 @@ def main():
     """
     best_results_data_frame.to_csv(os.path.join(path, 'all_results_best.csv'), index=False)
     #######################################################################################
-    dfx = best_results_data_frame.loc[best_results_data_frame['DATA'].isin(EXTRA_DATASETS)]
-    dfx.to_csv(os.path.join(path, 'extra_results_best.csv'), index=False)
+    #dfx = best_results_data_frame.loc[best_results_data_frame['DATA'].isin(EXTRA_DATASETS)]
+    #dfx.to_csv(os.path.join(path, 'extra_results_best.csv'), index=False)
     #######################################################################################
     #print(best_results_data_frame, "\n")
     for data in DATASETS:
     #for data in (DATASETS + EXTRA_DATASETS):
         for model in MODELS:
-            print("\n########")
+            print("\n\n###############################################################################")
             print(data)
             print(model)
             ####best_results_data_frame['VALID DIFF'] = best_results_data_frame['VALID INTER_LOGITS MEAN'] - best_results_data_frame['VALID INTRA_LOGITS MEAN']
@@ -303,9 +316,12 @@ def main():
                 best_results_data_frame['DATA'].isin([data]) &
                 best_results_data_frame['MODEL'].isin([model])
             ]
-            #df = df[['OPTIM','TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1',]]
-            print(df)
-            print()
+
+            if df.empty:
+                continue
+            ##df = df[['OPTIM','TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1',]]
+            #print(df)
+            #print()
             dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].mean()
             dfx = dfx.rename(columns={'TRAIN LOSS': 'TRAIN LOSS MEAN', 'TRAIN ACC1': 'TRAIN ACC1 MEAN',
                 'VALID LOSS': 'VALID LOSS MEAN', 'VALID ACC1': 'VALID ACC1 MEAN'})
@@ -313,12 +329,14 @@ def main():
             #print(dfx.to_string())
             dfx = dfx.sort_values('VALID ACC1 MEAN', ascending=False)#.drop_duplicates(["LOSS"])
             print(dfx.to_string())
+            print()
             #dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg([np.mean, np.std, np.count])
             dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg(['mean', 'std', 'count'])
-            print(dfx)
+            #print(dfx)
+            #print()
             ####df.to_csv(os.path.join(path, data+'+'+model+'+results_best.csv'), index=False)
             ####df = df.rename(columns={'VALID INTRA_LOGITS MEAN': 'VIALM', 'VALID INTER_LOGITS MEAN': 'VIELM'})
-            print("########\n")
+            print("###############################################################################\n\n")
 
     sys.exit()
 

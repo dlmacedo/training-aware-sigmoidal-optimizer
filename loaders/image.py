@@ -132,6 +132,7 @@ class ImageLoader:
 
         elif args.dataset == "cifar100":
             self.normalize = transforms.Normalize((0.507, 0.486, 0.440), (0.267, 0.256, 0.276))
+            """
             if self.args.model_name.startswith("efficientnet"):
                 self.train_transform = transforms.Compose([
                     transforms.Resize(256, BICUBIC),
@@ -145,17 +146,18 @@ class ImageLoader:
                     transforms.ToTensor(),
                     self.normalize,
                 ])
-            else:     
-                self.train_transform = transforms.Compose([
-                    transforms.RandomCrop(32, padding=4),
-                    transforms.RandomHorizontalFlip(),
-                    transforms.ToTensor(),
-                    self.normalize,
-                ])
-                self.inference_transform = transforms.Compose([
-                    transforms.ToTensor(),
-                    self.normalize,
-                ])
+            else:
+            """     
+            self.train_transform = transforms.Compose([
+                transforms.RandomCrop(32, padding=4),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                self.normalize,
+            ])
+            self.inference_transform = transforms.Compose([
+                transforms.ToTensor(),
+                self.normalize,
+            ])
             self.dataset_path = "data/cifar100"
             self.trainset_for_train = torchvision.datasets.CIFAR100(
                 root=self.dataset_path, train=True, download=True, transform=self.train_transform)
@@ -271,6 +273,30 @@ class ImageLoader:
             self.trainset_for_train = ImageFolder(self.train_path, transform=self.train_transform)
             self.trainset_for_infer = ImageFolder(self.train_path, transform=self.inference_transform)
             self.val_set = ImageFolder(self.val_path, transform=self.inference_transform)
+
+
+        elif args.dataset == "tinyimagenet200":
+            #self.normalize = transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+            self.normalize = transforms.Normalize((0.480, 0.448, 0.397), (0.276, 0.269, 0.282))
+            self.train_transform = transforms.Compose([
+                transforms.Resize(32), #### Important!!!
+                transforms.RandomCrop(32, padding=4),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                self.normalize,
+            ])
+            self.inference_transform = transforms.Compose([
+                transforms.Resize(32), #### Important!!!
+                transforms.ToTensor(),
+                self.normalize,
+            ])
+            self.dataset_path = "/mnt/ssd/tiny-imagenet-200"
+            self.train_path = os.path.join(self.dataset_path, 'train')
+            self.val_path = os.path.join(self.dataset_path, 'val')
+            self.trainset_for_train = ImageFolder(self.train_path, transform=self.train_transform)
+            self.trainset_for_infer = ImageFolder(self.train_path, transform=self.inference_transform)
+            self.val_set = ImageFolder(self.val_path, transform=self.inference_transform)
+
 
     def get_loaders(self):
 

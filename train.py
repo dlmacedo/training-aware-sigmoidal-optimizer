@@ -134,74 +134,23 @@ def main():
                     elif config[0] == "model":
                         args.model_name = str(config[1])
                         print("MODEL:", args.model_name.upper())
+                        """
                         if args.model_name == "textcnn":
                             args.max_sen_len = 30
                             #args.max_sen_len = None
-                            """
-                            class TextCNNConfig(object):
-                                embed_size = 300
-                                num_channels = 100
-                                kernel_size = [3,4,5]
-                                dropout_keep = 0.8
-                                output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
-                                #max_epochs = 15
-                                #lr = 0.3
-                                #batch_size = 64
-                                max_sen_len = 30 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
-                            args.text_config = TextCNNConfig()
-                            """
+                        elif args.model_name == "textcnn1d":
+                            #args.max_sen_len = 30
+                            args.max_sen_len = None
+                        elif args.model_name == "attbilstm":
+                            #args.max_sen_len = 30
+                            args.max_sen_len = None
                         elif args.model_name == "textrnn":
                             args.max_sen_len = None
-                            """
-                            class TextRNNConfig(object):
-                                embed_size = 300
-                                hidden_layers = 2
-                                hidden_size = 32
-                                bidirectional = True
-                                output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
-                                #max_epochs = 10
-                                #lr = 0.25
-                                #batch_size = 64
-                                max_sen_len = 20 # Sequence length for RNN #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
-                                dropout_keep = 0.8
-                            args.text_config = TextRNNConfig()
-                            """
                         elif args.model_name == "rcnn":
                             args.max_sen_len = None
-                            """
-                            class RCNNConfig(object):
-                                embed_size = 300
-                                hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
-                                hidden_size = 64
-                                output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
-                                hidden_size_linear = 64
-                                dropout_keep = 0.8                                
-                                #max_epochs = 15
-                                #lr = 0.5
-                                #batch_size = 128
-                                ######################
-                                #seq_len = None # Sequence length for RNN
-                                ######################
-                                max_sen_len = None
-                                ######################
-                            args.text_config = RCNNConfig()
-                            """
                         elif args.model_name == "s2satt":
                             args.max_sen_len = None
-                            """
-                            class S2SAttConfig(object):
-                                embed_size = 300
-                                hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
-                                hidden_size = 32
-                                bidirectional = True
-                                output_size = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
-                                dropout_keep = 0.8
-                                #max_epochs = 15
-                                #lr = 0.5
-                                #batch_size = 128
-                                max_sen_len = None # Sequence length for RNN
-                            args.text_config = S2SAttConfig()
-                            """
+                        """
                     elif config[0] == "optim":
                         args.optim = str(config[1])
                         print("OPTIM:", args.optim.upper())
@@ -223,6 +172,9 @@ def main():
                     args.data_type = "image"
                 elif args.dataset == "imagenet32":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000
+                    args.data_type = "image"
+                elif args.dataset == "tinyimagenet200":
+                    args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 200
                     args.data_type = "image"
                 elif args.dataset == "imagenet2012":
                     args.number_of_model_classes = args.number_of_model_classes if args.number_of_model_classes else 1000

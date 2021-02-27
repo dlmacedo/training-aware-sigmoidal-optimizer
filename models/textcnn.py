@@ -24,9 +24,9 @@ class TextCNN(nn.Module):
         self.output_size = num_class
         
         # Embedding Layer
-        #self.embeddings = nn.Embedding(vocab_size, self.config.embed_size)
         self.embeddings = nn.Embedding(vocab_size, self.embed_size)
         self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=False)
+        #self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=True)
         #self.embeddings.weight.data.uniform_(-0.5, 0.5)
         
         # This stackoverflow thread clarifies how conv1d works

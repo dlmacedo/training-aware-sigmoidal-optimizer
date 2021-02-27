@@ -96,19 +96,28 @@ class CNNAgent:
                 depth=34, widen_factor=10, num_classes=self.args.number_of_model_classes)
         #elif self.args.model_name == "vgg":
         #    self.model = models.VGG19(num_classes=self.args.number_of_model_classes)
+        #elif self.args.model_name == "efficientnetb0_":
+        #    self.model = models.EfficientNet_(
+        #        num_classes=self.args.number_of_model_classes, width_coefficient=1.0, depth_coefficient=1.0, dropout_rate=0.2)
         elif self.args.model_name == "efficientnetb0":
-            self.model = models.EfficientNet(
-                num_classes=self.args.number_of_model_classes, width_coefficient=1.0, depth_coefficient=1.0, dropout_rate=0.2)
+            self.model = models.EfficientNetB0(
+                num_classes=self.args.number_of_model_classes)
         #############################################################################################################################
         #############################################################################################################################
-        #elif self.args.model_name == "textrnn":
-        #    self.model = models.TextRNN(
-        #        #self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
-        #        len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings, self.args.number_of_model_classes)
-        ##############################################################
-        elif self.args.model_name == "textcnn":
-            self.model = models.TextCNN(
+        elif self.args.model_name == "textrnn":
+            self.model = models.TextRNN(
+                #self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
                 len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings, self.args.number_of_model_classes)
+        ##############################################################
+        #elif self.args.model_name == "textcnn":
+        #    self.model = models.TextCNN(
+        #        len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings, self.args.number_of_model_classes)
+        elif self.args.model_name == "textcnn1d":
+            self.model = models.TextCNN1D(
+                len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings, self.args.number_of_model_classes)
+        #elif self.args.model_name == "attbilstm":
+        #    self.model = models.AttBiLSTM(
+        #        len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings, self.args.number_of_model_classes)
         elif self.args.model_name == "rcnn":
             self.model = models.RCNN(
                 #self.args.text_config,len(self.args.text_dataset.vocab), self.args.text_dataset.word_embeddings)
