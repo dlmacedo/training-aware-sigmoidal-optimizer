@@ -1,1 +1,1 @@
-from .cnn import *
+from .classification import *

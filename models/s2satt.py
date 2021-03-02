@@ -14,7 +14,7 @@ class Seq2SeqAttention(nn.Module):
         #self.config = config
 
         self.embed_size = 300
-        self.hidden_layers = 1 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
+        self.hidden_layers = 4 #### <<<<<<<<<<<<<<<<<<<<<<<<<<<====================
         self.hidden_size = 32
         self.bidirectional = True
         self.output_size = num_class

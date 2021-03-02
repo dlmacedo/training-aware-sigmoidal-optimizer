@@ -1,0 +1,6 @@
+DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
+tinyimagenet200,efficientnetb0,taso_l0.1_e100_w0.0001_m0.9_nf_a25_b0.7_tbd,1,1,TRAIN,LOSS,5.00106097366333
+tinyimagenet200,efficientnetb0,taso_l0.1_e100_w0.0001_m0.9_nf_a25_b0.7_tbd,1,1,TRAIN,ACC1,2.3889999999999967
+tinyimagenet200,efficientnetb0,taso_l0.1_e100_w0.0001_m0.9_nf_a25_b0.7_tbd,1,1,HYPER,LR,0.10009999677581337
+tinyimagenet200,efficientnetb0,taso_l0.1_e100_w0.0001_m0.9_nf_a25_b0.7_tbd,1,1,VALID,LOSS,4.6938194702148435
+tinyimagenet200,efficientnetb0,taso_l0.1_e100_w0.0001_m0.9_nf_a25_b0.7_tbd,1,1,VALID,ACC1,4.700000000000005

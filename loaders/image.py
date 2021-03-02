@@ -7,6 +7,7 @@ from torchvision.datasets import ImageFolder
 from torch.utils.data.sampler import SubsetRandomSampler
 from torch.utils.data import DataLoader
 import torch.utils.data as data
+#import torchsample.transforms as tstf
 import numpy as np
 import torch
 from PIL import Image
@@ -122,7 +123,8 @@ class ImageLoader:
                 transforms.ToTensor(),
                 self.normalize,
             ])
-            self.dataset_path = "data/cifar10"
+            #self.dataset_path = "data/cifar10"
+            self.dataset_path = "/mnt/ssd/cifar10"
             self.trainset_for_train = torchvision.datasets.CIFAR10(
                 root=self.dataset_path, train=True, download=True, transform=self.train_transform)
             self.trainset_for_infer = torchvision.datasets.CIFAR10(
@@ -132,22 +134,6 @@ class ImageLoader:
 
         elif args.dataset == "cifar100":
             self.normalize = transforms.Normalize((0.507, 0.486, 0.440), (0.267, 0.256, 0.276))
-            """
-            if self.args.model_name.startswith("efficientnet"):
-                self.train_transform = transforms.Compose([
-                    transforms.Resize(256, BICUBIC),
-                    transforms.RandomCrop(224),
-                    transforms.RandomHorizontalFlip(),
-                    transforms.ToTensor(),
-                    self.normalize,
-                ])
-                self.inference_transform = transforms.Compose([
-                    transforms.Resize(224, BICUBIC),
-                    transforms.ToTensor(),
-                    self.normalize,
-                ])
-            else:
-            """     
             self.train_transform = transforms.Compose([
                 transforms.RandomCrop(32, padding=4),
                 transforms.RandomHorizontalFlip(),
@@ -158,7 +144,8 @@ class ImageLoader:
                 transforms.ToTensor(),
                 self.normalize,
             ])
-            self.dataset_path = "data/cifar100"
+            #self.dataset_path = "data/cifar100"
+            self.dataset_path = "/mnt/ssd/cifar100"
             self.trainset_for_train = torchvision.datasets.CIFAR100(
                 root=self.dataset_path, train=True, download=True, transform=self.train_transform)
             self.trainset_for_infer = torchvision.datasets.CIFAR100(

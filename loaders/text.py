@@ -157,18 +157,21 @@ class TextLoader:
             test_file = 'data/ag_news_csv/test.csv'  
 
         if self.args.dataset == "yelprf":
-            train_file = 'data/yelp_review_full_csv/train.csv'
-            test_file = 'data/yelp_review_full_csv/test.csv'  
+            #train_file = 'data/yelp_review_full_csv/train.csv'
+            #test_file = 'data/yelp_review_full_csv/test.csv'  
+            train_file = '/mnt/ssd/yelp_review_full_csv/train.csv'
+            test_file = '/mnt/ssd/yelp_review_full_csv/test.csv'  
 
         elif self.args.dataset == "yahooa":
-            #self.train_set, self.test_set = datasets.YahooAnswers()
-            train_file = 'data/yahoo_answers_csv/train.csv'
-            test_file = 'data/yahoo_answers_csv/test.csv'
+            #train_file = 'data/yahoo_answers_csv/train.csv'
+            #test_file = 'data/yahoo_answers_csv/test.csv'
+            train_file = '/mnt/ssd/yahoo_answers_csv/train.csv'
+            test_file = '/mnt/ssd/yahoo_answers_csv/test.csv'
 
-        elif self.args.dataset == "amazonrf":
-            #self.train_set, self.test_set = datasets.YelpReviewFull()
-            train_file = 'data/amazon_review_full_csv/train.csv'
-            test_file = 'data/amazon_review_full_csv/test.csv'  
+        #elif self.args.dataset == "amazonrf":
+        #    #self.train_set, self.test_set = datasets.YelpReviewFull()
+        #    train_file = 'data/amazon_review_full_csv/train.csv'
+        #    test_file = 'data/amazon_review_full_csv/test.csv'  
 
         self.args.text_dataset = Dataset(self.args)
         #self.args.text_dataset.load_data(w2v_file, train_file, test_file)

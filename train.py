@@ -216,7 +216,7 @@ def main():
                     print("\nARGUMENTS:", dict(utils.load_dict_list_from_csv(args.experiment_path, args.exp_type+"_args")[0]))
 
                     #if args.exp_type == "cnn_train":
-                    cnn_agent = agents.CNNAgent(args)
+                    cnn_agent = agents.ClassificationAgent(args)
                     cnn_agent.train_validate()
                     #elif args.exp_type == "cnn_odd_infer":
                     #    cnn_agent = agents.CNNAgent(args)
