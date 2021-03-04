@@ -1,0 +1,16 @@
+DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,1,TRAIN,LOSS,0.4623138661535527
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,1,TRAIN,ACC1,83.55749999999999
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,1,HYPER,LR,0.05
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,1,VALID,LOSS,0.462550741166622
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,1,VALID,ACC1,83.55263157894737
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,2,TRAIN,LOSS,0.3941609022938422
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,2,TRAIN,ACC1,86.6675
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,2,HYPER,LR,0.05
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,2,VALID,LOSS,0.34389416207087536
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,2,VALID,ACC1,88.22368421052632
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,3,TRAIN,LOSS,0.3552938930883681
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,3,TRAIN,ACC1,88.08916666666666
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,3,HYPER,LR,0.05
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,3,VALID,LOSS,0.4911438066664288
+agnews,rcnn,adagrad_l0.05_e20_w0.0001_d0_a0,1,3,VALID,ACC1,80.5

@@ -27,6 +27,7 @@ pd.set_option('display.width', 160)
 parser = argparse.ArgumentParser(description='Train')
 
 parser.add_argument('-x', '--executions', default=1, type=int, metavar='N', help='Number of executions')
+#parser.add_argument('-sx', '--start-executions', default=1, type=int, metavar='N', help='Number of the start execution')
 parser.add_argument('-w', '--workers', default=4, type=int, metavar='N', help='number of data loading workers')
 parser.add_argument('-bs', '--batch-size', default=64, type=int, metavar='N', help='mini-batch size')
 #parser.add_argument('-e', '--epochs', default=2, type=int, metavar='N', help='number of total epochs to run')
@@ -198,6 +199,7 @@ def main():
 
                 print("***************************************************************")
 
+                #for args.execution in range(args.start_executions, args.start_executions + args.executions):
                 for args.execution in range(1, args.executions + 1):
 
                     print("\n\n################ EXECUTION:", args.execution, "OF", args.executions, "################")

@@ -13,3 +13,4 @@ from .s2satt import *
 #from .textcnn import *
 #from .textcnn1d import *
 #from .attbilstm import *
+from .mobilenetv3 import *

@@ -134,8 +134,8 @@ class ResNet_(nn.Module):
                                        dilate=replace_stride_with_dilation[2])
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         ################
-        #self.fc = nn.Linear(512 * block.expansion, num_classes)
-        self.classifier = losses.GenericLossFirstPart(512 * block.expansion, num_classes, loss)
+        self.fc = nn.Linear(512 * block.expansion, num_classes)
+        #self.classifier = losses.GenericLossFirstPart(512 * block.expansion, num_classes, loss)
         ################
 
         for m in self.modules():
@@ -193,8 +193,8 @@ class ResNet_(nn.Module):
 
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
-        #x = self.fc(x)
-        x = self.classifier(x)
+        x = self.fc(x)
+        #x = self.classifier(x)
 
         return x
 
@@ -215,8 +215,8 @@ class ResNet_(nn.Module):
 
         x = self.avgpool(x)
         features = torch.flatten(x, 1)
-        #x = self.fc(x)
-        logits = self.classifier(features)
+        x = self.fc(x)
+        #logits = self.classifier(features)
 
         return logits, features
 

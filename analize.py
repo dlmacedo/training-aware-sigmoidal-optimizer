@@ -41,6 +41,7 @@ sns.set_context("paper")
 """
 
 pd.options.display.float_format = '{:,.4f}'.format
+#pd.options.display.float_format = '{:,.1f}'.format
 pd.set_option('display.width', 160)
 
 parser = argparse.ArgumentParser(description='Analize results in csv files')
@@ -307,7 +308,7 @@ def main():
     for data in DATASETS:
     #for data in (DATASETS + EXTRA_DATASETS):
         for model in MODELS:
-            print("\n\n###############################################################################")
+            print("\n\n###############################################################################################################################")
             print(data)
             print(model)
             ####best_results_data_frame['VALID DIFF'] = best_results_data_frame['VALID INTER_LOGITS MEAN'] - best_results_data_frame['VALID INTRA_LOGITS MEAN']
@@ -321,22 +322,27 @@ def main():
                 continue
             ##df = df[['OPTIM','TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1',]]
             #print(df)
-            #print()
-            dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].mean()
-            dfx = dfx.rename(columns={'TRAIN LOSS': 'TRAIN LOSS MEAN', 'TRAIN ACC1': 'TRAIN ACC1 MEAN',
-                'VALID LOSS': 'VALID LOSS MEAN', 'VALID ACC1': 'VALID ACC1 MEAN'})
-            dfx = dfx.sort_values('OPTIM', ascending=True)#.drop_duplicates(["LOSS"])
-            print(dfx.to_string())
-            dfx = dfx.sort_values('VALID ACC1 MEAN', ascending=False)#.drop_duplicates(["LOSS"])
-            print(dfx.to_string())
             print()
-            #dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg([np.mean, np.std, np.count])
+            dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].mean()
+            #dfx = dfx.rename(columns={
+            #    'TRAIN LOSS': 'TRAIN LOSS MEAN', 'TRAIN ACC1': 'TRAIN ACC1 MEAN',
+            #    'VALID LOSS': 'VALID LOSS MEAN', 'VALID ACC1': 'VALID ACC1 MEAN'})
+            dfx = dfx.sort_values('OPTIM', ascending=True)#.drop_duplicates(["LOSS"])
+            print("SORTED By OPTIM!!!")
+            print(dfx.to_string())
+            print("-------------------------------------------------------------------------------------------------------------------------------")
+            dfx = dfx.sort_values('VALID ACC1', ascending=False)#.drop_duplicates(["LOSS"])
+            print("SORTED BY VALID ACCURACY!!!")
+            print(dfx.to_string())
+            print("-------------------------------------------------------------------------------------------------------------------------------")
             dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg(['mean', 'std', 'count'])
-            print(dfx)
+            #dfx = dfx.agg(['mean', 'std', 'count'])
+            print("MEAN AND STD OF MANY RUNS!!!")
+            print(dfx.to_string())
             print()
             ####df.to_csv(os.path.join(path, data+'+'+model+'+results_best.csv'), index=False)
             ####df = df.rename(columns={'VALID INTRA_LOGITS MEAN': 'VIALM', 'VALID INTER_LOGITS MEAN': 'VIELM'})
-            print("###############################################################################\n\n")
+            print("##############################################################333333333333333333333333333333333333333333333333#################\n\n")
 
     sys.exit()
 

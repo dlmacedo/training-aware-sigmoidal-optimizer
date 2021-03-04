@@ -85,6 +85,9 @@ class ClassificationAgent:
         elif self.args.model_name == "resnet18_":
             self.model = models.resnet18_(
                 num_classes=self.args.number_of_model_classes)
+        elif self.args.model_name == "resnet50_":
+            self.model = models.resnet18_(
+                num_classes=self.args.number_of_model_classes)
         elif self.args.model_name == "resnet34_":
             self.model = models.resnet34_(
                 num_classes=self.args.number_of_model_classes)
@@ -102,6 +105,9 @@ class ClassificationAgent:
         elif self.args.model_name == "efficientnetb0":
             self.model = models.EfficientNetB0(
                 num_classes=self.args.number_of_model_classes)
+        elif self.args.model_name == "mobilenetv3":
+            self.model = models.MobileNetV3(
+                mode='large', classes_num=self.args.number_of_model_classes, input_size=32, width_multiplier=1)
         #############################################################################################################################
         #############################################################################################################################
         elif self.args.model_name == "textrnn":
@@ -162,7 +168,7 @@ class ClassificationAgent:
             print("\n$$$$$$$$$$$$$$$")
             print("OPTIMIZER: SGD")
             print("$$$$$$$$$$$$$$$\n")
-            initial_learning_rate = float(self.args.optim.split("_")[1][2:])
+            initial_learning_rate = float(self.args.optim.split("_")[1][1:])
             self.args.epochs = int(self.args.optim.split("_")[2][1:])
             weight_decay = float(self.args.optim.split("_")[3][1:])
             momentum = float(self.args.optim.split("_")[4][1:])
@@ -189,7 +195,7 @@ class ClassificationAgent:
             print("\n$$$$$$$$$$$$$$$")
             print("OPTIMIZER: TASO")
             print("$$$$$$$$$$$$$$$\n")
-            initial_learning_rate = float(self.args.optim.split("_")[1][2:])
+            initial_learning_rate = float(self.args.optim.split("_")[1][1:])
             self.args.epochs = int(self.args.optim.split("_")[2][1:])
             weight_decay = float(self.args.optim.split("_")[3][1:])
             momentum = float(self.args.optim.split("_")[4][1:])
@@ -216,7 +222,7 @@ class ClassificationAgent:
             print("\n$$$$$$$$$$$$$$$")
             print("OPTIMIZER: ADAM")
             print("$$$$$$$$$$$$$$$\n")
-            initial_learning_rate = float(self.args.optim.split("_")[1][2:])
+            initial_learning_rate = float(self.args.optim.split("_")[1][1:])
             self.args.epochs = int(self.args.optim.split("_")[2][1:])
             weight_decay = float(self.args.optim.split("_")[3][1:])
             amsgrad = True if (self.args.optim.split("_")[4][1:] == "t") else False
@@ -239,7 +245,7 @@ class ClassificationAgent:
             print("\n$$$$$$$$$$$$$$$$$$")
             print("OPTIMIZER: RMSPROP")
             print("$$$$$$$$$$$$$$$$$$\n")
-            initial_learning_rate = float(self.args.optim.split("_")[1][2:])
+            initial_learning_rate = float(self.args.optim.split("_")[1][1:])
             self.args.epochs = int(self.args.optim.split("_")[2][1:])
             weight_decay = float(self.args.optim.split("_")[3][1:])
             momentum = float(self.args.optim.split("_")[4][1:])
@@ -262,7 +268,7 @@ class ClassificationAgent:
             print("\n$$$$$$$$$$$$$$$$$$")
             print("OPTIMIZER: ADAGRAD")
             print("$$$$$$$$$$$$$$$$$$\n")
-            initial_learning_rate = float(self.args.optim.split("_")[1][2:])
+            initial_learning_rate = float(self.args.optim.split("_")[1][1:])
             self.args.epochs = int(self.args.optim.split("_")[2][1:])
             weight_decay = float(self.args.optim.split("_")[3][1:])
             lr_decay = float(self.args.optim.split("_")[4][1:])
