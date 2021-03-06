@@ -328,7 +328,7 @@ def main():
             #    'TRAIN LOSS': 'TRAIN LOSS MEAN', 'TRAIN ACC1': 'TRAIN ACC1 MEAN',
             #    'VALID LOSS': 'VALID LOSS MEAN', 'VALID ACC1': 'VALID ACC1 MEAN'})
             dfx = dfx.sort_values('OPTIM', ascending=True)#.drop_duplicates(["LOSS"])
-            print("SORTED By OPTIM!!!")
+            print("SORTED BY OPTIM!!!")
             print(dfx.to_string())
             print("-------------------------------------------------------------------------------------------------------------------------------")
             dfx = dfx.sort_values('VALID ACC1', ascending=False)#.drop_duplicates(["LOSS"])
