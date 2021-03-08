@@ -143,10 +143,11 @@ class ClassificationAgent:
         torch.cuda.manual_seed(self.args.base_seed)
 
         # print and save model arch...
-        if self.args.exp_type == "cnn_train":
-            print("\nMODEL:", self.model)
-            with open(os.path.join(self.args.experiment_path, 'model.arch'), 'w') as file:
-                print(self.model, file=file)
+        #if self.args.exp_type == "cnn_train":
+        # recent change!!! recent change!!!
+        print("\nMODEL:", self.model)
+        with open(os.path.join(self.args.experiment_path, 'model.arch'), 'w') as file:
+            print(self.model, file=file)
         
 
         print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")

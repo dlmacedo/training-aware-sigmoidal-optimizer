@@ -125,7 +125,7 @@ def main():
     ##print(SVHN_LOSSES_TEXTS)
     #print(OPTIM)
 
-    r"""
+    #"""
     ############################################################################
     ############################################################################
     #sns.set_context("paper", font_scale=1.6)
@@ -161,15 +161,16 @@ def main():
     #ax.set_title('Training Aware Sigmoidal Optimization')
 
     #label = r'$\mathrm{LR}=\frac{\mathrm{LR_I}}{1+\exp\left(\alpha \left(\frac{\mathrm{E}}{\mathrm{E_F}}-\beta\right)\right)}+\mathrm{LR_F}$'
-    label = r'$\mathrm{LR}=\frac{\mathrm{LR_I}}{1+\exp\left(\alpha \left(\mathrm{E}/\mathrm{E_F}-\beta\right)\right)}+\mathrm{LR_F}$'
     #label = r'$LR=\frac{LR_I}{1+\exp\left(\alpha \left(\frac{E}{E_F}-\beta\right)\right)}+LR_F$'
+    #label = r'$\mathrm{LR}=\frac{\mathrm{LR_I}}{1+\exp\left(\alpha \left(\mathrm{E}/\mathrm{E_F}-\beta\right)\right)}+\mathrm{LR_F}$'
+    label = r'$lr=\frac{lr_i}{1+\exp\left(\alpha \left(\epsilon/\epsilon_f-\beta\right)\right)}+lr_f$'    
     plt.plot(x, y, 'y', label=label, color='blue')  
-    plt.legend(loc='lower left', fontsize=11)
-    #with sns.axes_style("white"):
-    #    plt.legend(loc='lower right', bbox_to_anchor=(1, -0.25), ncol=6, fontsize=13)
+    #plt.legend(loc='lower left', fontsize=13)
+    with sns.axes_style("white"):
+        plt.legend(bbox_to_anchor=(0.51, 0.18), fontsize=11)
 
     #plt.show()
-    plt.savefig(os.path.join(path, 'plot_taso_curve.png'), bbox_inches='tight', dpi=300)
+    plt.savefig(os.path.join(path, 'plot_new_taso_curve.png'), bbox_inches='tight', dpi=300)
     plt.close()
     ############################################################################
     ############################################################################
@@ -235,7 +236,7 @@ def main():
     plt.close()
     ############################################################################
     ############################################################################
-    """
+    #"""
 
 
     #######################
@@ -327,12 +328,12 @@ def main():
             #dfx = dfx.rename(columns={
             #    'TRAIN LOSS': 'TRAIN LOSS MEAN', 'TRAIN ACC1': 'TRAIN ACC1 MEAN',
             #    'VALID LOSS': 'VALID LOSS MEAN', 'VALID ACC1': 'VALID ACC1 MEAN'})
-            dfx = dfx.sort_values('OPTIM', ascending=True)#.drop_duplicates(["LOSS"])
-            print("SORTED BY OPTIM!!!")
-            print(dfx.to_string())
-            print("-------------------------------------------------------------------------------------------------------------------------------")
             dfx = dfx.sort_values('VALID ACC1', ascending=False)#.drop_duplicates(["LOSS"])
             print("SORTED BY VALID ACCURACY!!!")
+            print(dfx.to_string())
+            print("-------------------------------------------------------------------------------------------------------------------------------")
+            dfx = dfx.sort_values('OPTIM', ascending=True)#.drop_duplicates(["LOSS"])
+            print("SORTED BY OPTIM!!!")
             print(dfx.to_string())
             print("-------------------------------------------------------------------------------------------------------------------------------")
             dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg(['mean', 'std', 'count'])
@@ -342,7 +343,7 @@ def main():
             print()
             ####df.to_csv(os.path.join(path, data+'+'+model+'+results_best.csv'), index=False)
             ####df = df.rename(columns={'VALID INTRA_LOGITS MEAN': 'VIALM', 'VALID INTER_LOGITS MEAN': 'VIELM'})
-            print("##############################################################333333333333333333333333333333333333333333333333#################\n\n")
+            print("###############################################################################################################################\n\n")
 
     sys.exit()
 

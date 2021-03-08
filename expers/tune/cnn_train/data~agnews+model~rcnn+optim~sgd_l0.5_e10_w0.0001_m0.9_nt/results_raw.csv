@@ -1,0 +1,11 @@
+DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
+agnews,rcnn,sgd_l0.5_e10_w0.0001_m0.9_nt,1,1,TRAIN,LOSS,28.82866623579026
+agnews,rcnn,sgd_l0.5_e10_w0.0001_m0.9_nt,1,1,TRAIN,ACC1,26.98666666666667
+agnews,rcnn,sgd_l0.5_e10_w0.0001_m0.9_nt,1,1,HYPER,LR,0.5
+agnews,rcnn,sgd_l0.5_e10_w0.0001_m0.9_nt,1,1,VALID,LOSS,30.89391191595429
+agnews,rcnn,sgd_l0.5_e10_w0.0001_m0.9_nt,1,1,VALID,ACC1,25.0
+agnews,rcnn,sgd_l0.5_e10_w0.0001_m0.9_nt,1,2,TRAIN,LOSS,28.924628462854958
+agnews,rcnn,sgd_l0.5_e10_w0.0001_m0.9_nt,1,2,TRAIN,ACC1,27.00083333333333
+agnews,rcnn,sgd_l0.5_e10_w0.0001_m0.9_nt,1,2,HYPER,LR,0.5
+agnews,rcnn,sgd_l0.5_e10_w0.0001_m0.9_nt,1,2,VALID,LOSS,26.902261936477753
+agnews,rcnn,sgd_l0.5_e10_w0.0001_m0.9_nt,1,2,VALID,ACC1,25.0
