@@ -1,0 +1,16 @@
+DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,1,TRAIN,LOSS,0.3857115952069926
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,1,TRAIN,ACC1,86.62333333333333
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,1,HYPER,LR,0.0005
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,1,VALID,LOSS,0.45110547730704076
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,1,VALID,ACC1,83.5
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,2,TRAIN,LOSS,0.31232348057057857
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,2,TRAIN,ACC1,89.85583333333334
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,2,HYPER,LR,0.0005
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,2,VALID,LOSS,0.3834822953086766
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,2,VALID,ACC1,86.36842105263159
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,3,TRAIN,LOSS,0.28252787946299585
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,3,TRAIN,ACC1,90.945
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,3,HYPER,LR,0.0005
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,3,VALID,LOSS,0.32449423920576775
+agnews,rcnn,adam_l0.0005_e10_w0_af_bf0.9_bs0.99,1,3,VALID,ACC1,88.60526315789474

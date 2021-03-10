@@ -145,10 +145,18 @@ def main():
     ax.set_xticks([0,25,50,75,100])
     labels = [item.get_text() for item in ax.get_xticklabels()]
     labels[0] = '0'
-    labels[1] = r'$\mathrm{E_F}/4$'
-    labels[2] = r'$\mathrm{E_F}/2$'
-    labels[3] = r'$\mathrm{3E_F}/4$'
-    labels[4] = r'$\mathrm{E_F}$'
+    #labels[1] = r'$\mathrm{E_F}/4$'
+    #labels[2] = r'$\mathrm{E_F}/2$'
+    #labels[3] = r'$\mathrm{3E_F}/4$'
+    #labels[4] = r'$\mathrm{E_F}$'
+    #labels[1] = r'$\epsilon_f/4$'
+    #labels[2] = r'$\epsilon_f/2$'
+    #labels[3] = r'$3\epsilon_f/4$'
+    #labels[4] = r'$\epsilon_f$'
+    labels[1] = r'$e_f/4$'
+    labels[2] = r'$e_f/2$'
+    labels[3] = r'$3e_f/4$'
+    labels[4] = r'$e_f$'
     ax.set_xticklabels(labels)
     #ax.set_yticks([1])
     #labels = [item.get_text() for item in ax.get_yticklabels()]
@@ -156,18 +164,18 @@ def main():
     ax.set_yticklabels([])
 
     ax.axvline(55, color='red', linestyle='dashed')
-    ax.set_xlabel('Epochs')
-    ax.set_ylabel('Learning Rate')
+    ax.set_xlabel('epochs')
+    ax.set_ylabel('learning rate')
     #ax.set_title('Training Aware Sigmoidal Optimization')
 
     #label = r'$\mathrm{LR}=\frac{\mathrm{LR_I}}{1+\exp\left(\alpha \left(\frac{\mathrm{E}}{\mathrm{E_F}}-\beta\right)\right)}+\mathrm{LR_F}$'
     #label = r'$LR=\frac{LR_I}{1+\exp\left(\alpha \left(\frac{E}{E_F}-\beta\right)\right)}+LR_F$'
     #label = r'$\mathrm{LR}=\frac{\mathrm{LR_I}}{1+\exp\left(\alpha \left(\mathrm{E}/\mathrm{E_F}-\beta\right)\right)}+\mathrm{LR_F}$'
-    label = r'$lr=\frac{lr_i}{1+\exp\left(\alpha \left(\epsilon/\epsilon_f-\beta\right)\right)}+lr_f$'    
+    label = r'$lr(e)=\frac{lr_i}{1+\exp\left(\alpha \left(e/e_f-\beta\right)\right)}+lr_f$'    
     plt.plot(x, y, 'y', label=label, color='blue')  
     #plt.legend(loc='lower left', fontsize=13)
     with sns.axes_style("white"):
-        plt.legend(bbox_to_anchor=(0.51, 0.18), fontsize=11)
+        plt.legend(bbox_to_anchor=(0.51, 0.18), fontsize=10)
 
     #plt.show()
     plt.savefig(os.path.join(path, 'plot_new_taso_curve.png'), bbox_inches='tight', dpi=300)
