@@ -104,3 +104,5 @@
 #python train.py -ei="tune" -et "cnn_train" -ec "data~agnews+model~rcnn+optim~taso_l0.1_e20_w0_m0.9_nt_a25_b0.7" -gpu 1 -x 1 -bs 32
 #python train.py -ei="tune" -et "cnn_train" -ec "data~agnews+model~rcnn+optim~taso_l0.05_e20_w0_m0.9_nt_a25_b0.7" -gpu 1 -x 1 -bs 32
 #python train.py -ei="tune" -et "cnn_train" -ec "data~agnews+model~rcnn+optim~taso_l0.01_e20_w0_m0.9_nt_a25_b0.7" -gpu 1 -x 1 -bs 32
+
+python train.py -ei="tune" -et "cnn_train" -ec "data~agnews+model~rcnn+optim~taso_l0.03_e20_w0.0001_m0.9_nt_a25_b0.7" -gpu 1 -x 1 -bs 32
