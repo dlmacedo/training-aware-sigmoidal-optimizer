@@ -163,6 +163,7 @@ class ClassificationAgent:
         # create loss
         #self.criterion = losses.GenericLossSecondPart(self.model.classifier).cuda()
         self.criterion = nn.CrossEntropyLoss().cuda()
+        #total_iteractions = self.args.epochs * self.args.iteractions_per_epoch
 
         # create train
         if self.args.optim.startswith("sgd"):
@@ -183,8 +184,6 @@ class ClassificationAgent:
                 weight_decay=weight_decay,
                 momentum=momentum,
                 nesterov=nesterov)
-            #taso_function = lambda epoch: 1/(1 + math.exp(alpha*(((epoch+1)/self.args.epochs)-beta))) + 0.001
-            #self.scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=taso_function, verbose=True)
             print("INITIAL LEARNING RATE: ", initial_learning_rate)
             print("TOTAL EPOCHS: ", self.args.epochs)
             print("WEIGHT DECAY: ", weight_decay)
@@ -192,9 +191,9 @@ class ClassificationAgent:
             print("NESTEROV: ", nesterov)
             #print("ALPHA: ", alpha)
             #print("BETA: ", beta)
-        elif self.args.optim.startswith("taso"):
+        elif self.args.optim.startswith("sig"):
             print("\n$$$$$$$$$$$$$$$")
-            print("OPTIMIZER: TASO")
+            print("OPTIMIZER: SIG")
             print("$$$$$$$$$$$$$$$\n")
             initial_learning_rate = float(self.args.optim.split("_")[1][1:])
             self.args.epochs = int(self.args.optim.split("_")[2][1:])
@@ -210,8 +209,11 @@ class ClassificationAgent:
                 weight_decay=weight_decay,
                 momentum=momentum,
                 nesterov=nesterov)
-            taso_function = lambda epoch: 1/(1+math.exp(alpha*(((epoch+1)/self.args.epochs)-beta))) + 0.001
-            self.scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=taso_function, verbose=True)
+            total_iteractions = self.args.epochs * len(self.trainset_loader_for_train)
+            #print(total_iteractions)
+            #sig_function = lambda epoch: 1/(1+math.exp(alpha*(((epoch+1)/total_iteractions)-beta))) + 0.001
+            sig_function = lambda iteraction: 1/(1+math.exp(alpha*(((iteraction+1)/total_iteractions)-beta))) + 0.001
+            self.scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=sig_function, verbose=True)
             print("INITIAL LEARNING RATE: ", initial_learning_rate)
             print("TOTAL EPOCHS: ", self.args.epochs)
             print("WEIGHT DECAY: ", weight_decay)
@@ -237,7 +239,9 @@ class ClassificationAgent:
                 weight_decay=weight_decay,
                 momentum=momentum,
                 nesterov=nesterov)
-            htd_function = lambda epoch: (1-math.tanh(l+(u-l)*((epoch+1)/self.args.epochs)))/2
+            #htd_function = lambda epoch: (1-math.tanh(l+(u-l)*((epoch+1)/self.args.epochs)))/2
+            total_iteractions = self.args.epochs * len(self.trainset_loader_for_train)
+            htd_function = lambda iteraction: (1-math.tanh(l+(u-l)*((iteraction+1)/total_iteractions)))/2
             self.scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=htd_function, verbose=True)
             print("INITIAL LEARNING RATE: ", initial_learning_rate)
             print("TOTAL EPOCHS: ", self.args.epochs)
@@ -264,7 +268,9 @@ class ClassificationAgent:
                 weight_decay=weight_decay,
                 momentum=momentum,
                 nesterov=nesterov)
-            cos_function = lambda epoch: 1+math.cos(math.pi*((epoch+1)/self.args.epochs))
+            #cos_function = lambda epoch: (1+math.cos(math.pi*((epoch+1)/self.args.epochs)))/2
+            total_iteractions = self.args.epochs * len(self.trainset_loader_for_train)
+            cos_function = lambda iteraction: (1+math.cos(math.pi*((iteraction+1)/total_iteractions)))/2
             self.scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=cos_function, verbose=True)
             print("INITIAL LEARNING RATE: ", initial_learning_rate)
             print("TOTAL EPOCHS: ", self.args.epochs)
@@ -392,11 +398,6 @@ class ClassificationAgent:
 
             train_loss, train_acc1 = self.train_epoch()
             valid_loss, valid_acc1 = self.validate_epoch()
-
-            # Adjusting learning rate (if not using reduce on plateau)...
-            if self.args.optim.startswith("taso"):
-                self.scheduler.step()
-
 
             with open(self.args.executions_raw_results_file_path, "a") as raw_results:
                 raw_results.write("{},{},{},{},{},{},{},{}\n".format(
@@ -551,6 +552,14 @@ class ClassificationAgent:
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
+
+            #"""
+            # Adjusting learning rate (if not using reduce on plateau)...
+            optim_or_scheduler = self.args.optim.split('_')[0]
+            if optim_or_scheduler in ['sig','htd','cos']:
+                self.scheduler.step()
+                print("Scheduler Step!!!")
+            #"""
 
             if batch_index % self.args.print_freq == 0:
                 print('Train Epoch: [{0}][{1:3}/{2}]\t'

@@ -112,6 +112,7 @@ class ImageLoader:
                 root=self.dataset_path, train=False, download=True, transform=self.inference_transform)
 
         elif args.dataset == "cifar10":
+            #self.args.iteractions_per_epoch = 785
             self.normalize = transforms.Normalize((0.491, 0.482, 0.446), (0.247, 0.243, 0.261))
             self.train_transform = transforms.Compose([
                 transforms.RandomCrop(32, padding=4),
@@ -133,6 +134,7 @@ class ImageLoader:
                 root=self.dataset_path, train=False, download=True, transform=self.inference_transform)
 
         elif args.dataset == "cifar100":
+            #self.args.iteractions_per_epoch = 785
             self.normalize = transforms.Normalize((0.507, 0.486, 0.440), (0.267, 0.256, 0.276))
             self.train_transform = transforms.Compose([
                 transforms.RandomCrop(32, padding=4),
@@ -211,6 +213,7 @@ class ImageLoader:
                 root=self.dataset_path, split="test", download=True, transform=self.inference_transform)
 
         elif args.dataset == "stl10":
+            #self.args.iteractions_per_epoch = 79
             self.normalize = transforms.Normalize((0.446, 0.439, 0.406), (0.260,  0.256, 0.271))
             self.train_transform = transforms.Compose([
                 transforms.Resize(32), #### Important!!!

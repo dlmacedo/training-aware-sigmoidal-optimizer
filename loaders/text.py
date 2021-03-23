@@ -151,12 +151,14 @@ class TextLoader:
         self.args = args
 
         if self.args.dataset == "agnews":
-        #    train_file = 'data/agnews/ag_news.train'
-        #    test_file = 'data/agnews/ag_news.test'  
+            self.args.iteractions_per_epoch = 2000
+            #train_file = 'data/agnews/ag_news.train'
+            #test_file = 'data/agnews/ag_news.test'  
             train_file = 'data/ag_news_csv/train.csv'
             test_file = 'data/ag_news_csv/test.csv'  
 
         if self.args.dataset == "yelprf":
+            self.args.iteractions_per_epoch = 10000
             #train_file = 'data/yelp_review_full_csv/train.csv'
             #test_file = 'data/yelp_review_full_csv/test.csv'  
             train_file = '/mnt/ssd/yelp_review_full_csv/train.csv'
