@@ -166,6 +166,7 @@ class ClassificationAgent:
         #total_iteractions = self.args.epochs * self.args.iteractions_per_epoch
 
         # create train
+        #print(len(self.trainset_loader_for_train))
         if self.args.optim.startswith("sgd"):
             print("\n$$$$$$$$$$$$$$$")
             print("OPTIMIZER: SGD")
@@ -210,9 +211,7 @@ class ClassificationAgent:
                 momentum=momentum,
                 nesterov=nesterov)
             total_iteractions = self.args.epochs * len(self.trainset_loader_for_train)
-            #print(total_iteractions)
-            #sig_function = lambda epoch: 1/(1+math.exp(alpha*(((epoch+1)/total_iteractions)-beta))) + 0.001
-            sig_function = lambda iteraction: 1/(1+math.exp(alpha*(((iteraction+1)/total_iteractions)-beta))) + 0.001
+            sig_function = lambda iteraction: 1/(1+math.exp(alpha*(((iteraction+1)/total_iteractions)-beta)))
             self.scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=sig_function, verbose=True)
             print("INITIAL LEARNING RATE: ", initial_learning_rate)
             print("TOTAL EPOCHS: ", self.args.epochs)
@@ -556,7 +555,7 @@ class ClassificationAgent:
             #"""
             # Adjusting learning rate (if not using reduce on plateau)...
             optim_or_scheduler = self.args.optim.split('_')[0]
-            if optim_or_scheduler in ['sig','htd','cos']:
+            if optim_or_scheduler in ['sig','htd','cos','sigz','sigx']:
                 self.scheduler.step()
                 print("Scheduler Step!!!")
             #"""

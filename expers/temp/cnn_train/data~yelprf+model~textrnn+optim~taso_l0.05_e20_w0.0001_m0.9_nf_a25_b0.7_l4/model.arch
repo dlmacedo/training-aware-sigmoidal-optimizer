@@ -1,6 +1,0 @@
-TextRNN(
-  (embeddings): Embedding(766037, 300)
-  (lstm): LSTM(300, 32, num_layers=4, dropout=0.8, bidirectional=True)
-  (dropout): Dropout(p=0.8, inplace=False)
-  (fc): Linear(in_features=256, out_features=5, bias=True)
-)

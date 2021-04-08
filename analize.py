@@ -67,7 +67,7 @@ def main():
     DATASETS = [
         #'svhn',
         'stl10',
-        'cifar10', 'cifar100', 'tinyimagenet200',
+        'cifar10', 'cifar100', 'imagenet2012',
         'agnews', 'yelprf', 'yahooa',
         #'amazonrf',
         ]
@@ -88,8 +88,8 @@ def main():
     #MODELS = ['vgg19', 'resnet34', 'resnet50', 'wideresnet3410', 'densenetbc100'] 
     MODELS = [
         'resnet34',
-        'resnet50', 'densenetbc100', 'efficientnetb0',
-        'rcnn', 'textrnn', 's2satt',
+        'resnet50', 'densenetbc100',# 'efficientnetb0',
+        'rcnn', 's2satt',# 'textrnn', 
         ] 
     #############################################################################
     #############################################################################
@@ -330,12 +330,12 @@ def main():
             if df.empty:
                 continue
             ##df = df[['OPTIM','TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1',]]
-            #print(df)
+            ##print(df)
             print()
             dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].mean()
-            #dfx = dfx.rename(columns={
-            #    'TRAIN LOSS': 'TRAIN LOSS MEAN', 'TRAIN ACC1': 'TRAIN ACC1 MEAN',
-            #    'VALID LOSS': 'VALID LOSS MEAN', 'VALID ACC1': 'VALID ACC1 MEAN'})
+            ##dfx = dfx.rename(columns={
+            ##    'TRAIN LOSS': 'TRAIN LOSS MEAN', 'TRAIN ACC1': 'TRAIN ACC1 MEAN',
+            ##    'VALID LOSS': 'VALID LOSS MEAN', 'VALID ACC1': 'VALID ACC1 MEAN'})
             dfx = dfx.sort_values('VALID ACC1', ascending=False)#.drop_duplicates(["LOSS"])
             print("SORTED BY VALID ACCURACY!!!")
             print(dfx.to_string())
@@ -345,7 +345,7 @@ def main():
             print(dfx.to_string())
             print("-------------------------------------------------------------------------------------------------------------------------------")
             dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].agg(['mean', 'std', 'count'])
-            #dfx = dfx.agg(['mean', 'std', 'count'])
+            ##dfx = dfx.agg(['mean', 'std', 'count'])
             print("MEAN AND STD OF MANY RUNS!!!")
             print(dfx.to_string())
             print()

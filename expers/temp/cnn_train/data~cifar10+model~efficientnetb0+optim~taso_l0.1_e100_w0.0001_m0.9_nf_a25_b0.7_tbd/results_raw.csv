@@ -1,6 +1,0 @@
-DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
-cifar10,efficientnetb0,taso_l0.1_e100_w0.0001_m0.9_nf_a25_b0.7_tbd,1,1,TRAIN,LOSS,2.05153880859375
-cifar10,efficientnetb0,taso_l0.1_e100_w0.0001_m0.9_nf_a25_b0.7_tbd,1,1,TRAIN,ACC1,25.4
-cifar10,efficientnetb0,taso_l0.1_e100_w0.0001_m0.9_nf_a25_b0.7_tbd,1,1,HYPER,LR,0.10009999677581337
-cifar10,efficientnetb0,taso_l0.1_e100_w0.0001_m0.9_nf_a25_b0.7_tbd,1,1,VALID,LOSS,1.7875111808776856
-cifar10,efficientnetb0,taso_l0.1_e100_w0.0001_m0.9_nf_a25_b0.7_tbd,1,1,VALID,ACC1,32.769999999999996

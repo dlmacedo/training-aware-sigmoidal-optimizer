@@ -1,6 +1,0 @@
-DATA,MODEL,OPTIM,EXECUTION,EPOCH,SET,METRIC,VALUE
-yelprf,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,TRAIN,LOSS,1.3009434556471617
-yelprf,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,TRAIN,ACC1,43.31123076923077
-yelprf,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,HYPER,LR,0.01
-yelprf,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,VALID,LOSS,1.4233025236154166
-yelprf,textcnn,adagrad_l0.01_e1_w0_d0_a0,1,1,VALID,ACC1,36.19799999999999
