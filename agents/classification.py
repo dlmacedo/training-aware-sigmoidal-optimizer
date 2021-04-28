@@ -555,7 +555,7 @@ class ClassificationAgent:
             #"""
             # Adjusting learning rate (if not using reduce on plateau)...
             optim_or_scheduler = self.args.optim.split('_')[0]
-            if optim_or_scheduler in ['sig','htd','cos','sigz','sigx']:
+            if optim_or_scheduler in ['sig','htd','cos','sigz','sigx', 'sigw', 'sigk']:
                 self.scheduler.step()
                 print("Scheduler Step!!!")
             #"""

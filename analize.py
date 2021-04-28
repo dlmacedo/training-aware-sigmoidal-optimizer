@@ -330,7 +330,8 @@ def main():
             if df.empty:
                 continue
             ##df = df[['OPTIM','TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1',]]
-            ##print(df)
+            ##with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+            ##    print(df)
             print()
             dfx = df.groupby('OPTIM', as_index=False)[['TRAIN LOSS', 'TRAIN ACC1','VALID LOSS', 'VALID ACC1']].mean()
             ##dfx = dfx.rename(columns={
